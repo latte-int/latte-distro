@@ -1,0 +1,43 @@
+This is LattE corretto, a source code distribution of a version of
+LattE with all prerequisite libraries.
+
+Except for the optional library LiDIA, all software
+included in this distribution is free software.
+
+To build:
+
+   ./configure
+   make
+
+Some of the C++ libraries are very picky about the version of the C++
+compiler.  It works with GCC 3.3.2 and 3.3.4.  Older ones or newer
+ones might not work.  To ensure a specific compiler is used, type:
+
+   ./configure CC=/path/to/your/gcc CXX=/path/to/your/g++
+   make
+
+In particluar, cdd+ does not seem to compile with GCC 3.4.5.
+
+The pickiest of all C++ libraries used is LiDIA.  As a last resort,
+you can turn off using LiDIA:
+
+   ./configure --disable-lidia
+   make
+
+If you have a multiprocessor machine, be sure to use it to shorten the
+compile time by parallelizing the build:  For instance,
+
+   make -j4
+
+
+When the build process is finished, you will find all binaries in the
+directory dest/bin.  The binaries might depend on shared libraries
+installed in dest/lib, so add this directory to your LD_LIBRARY_PATH
+(and dest/bin to your PATH).
+
+				* * *
+
+I hope this LattE distribution works for you.  Please report any
+failures, so we can improve the distribution and also LattE itself.
+
+-- Matthias Koeppe <mkoeppe@mail.math.uni-magdeburg.de>
