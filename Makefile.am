@@ -6,28 +6,28 @@ ACLOCAL_AMFLAGS = -I m4
 
 PACKAGES=gmp cddplus cddlib ntl lidia latte
 
-GMP_VERSION=4.1.4
-GMP_TARGZ=gmp-$(GMP_VERSION).tar.gz
+GMP_VERSION=4.2.1
+GMP_TARGZ=$(top_srcdir)/gmp-$(GMP_VERSION).tar.gz
 GMP_DIR=gmp-$(GMP_VERSION)
 
 CDDPLUS_VERSION=077
-CDDPLUS_TARGZ=cdd+-$(CDDPLUS_VERSION).tar.gz
+CDDPLUS_TARGZ=$(top_srcdir)/cdd+-$(CDDPLUS_VERSION).tar.gz
 CDDPLUS_DIR=$(CURDIR)/cdd+-$(CDDPLUS_VERSION)
 
 CDDLIB_VERSION=094b
-CDDLIB_TARGZ=cddlib-$(CDDLIB_VERSION).tar.gz
+CDDLIB_TARGZ=$(top_srcdir)/cddlib-$(CDDLIB_VERSION).tar.gz
 CDDLIB_DIR=$(CURDIR)/cddlib-$(CDDLIB_VERSION)
 
 NTL_VERSION=5.4
-NTL_TARGZ=ntl-$(NTL_VERSION).tar.gz
+NTL_TARGZ=$(top_srcdir)/ntl-$(NTL_VERSION).tar.gz
 NTL_DIR=$(CURDIR)/ntl-$(NTL_VERSION)
 
 LIDIA_VERSION=2.2.0
-LIDIA_TARGZ=lidia-base-$(LIDIA_VERSION).tar.gz lidia-FF-$(LIDIA_VERSION).tar.gz lidia-LA-$(LIDIA_VERSION).tar.gz
+LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-FF-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-LA-$(LIDIA_VERSION).tar.gz
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
 LATTE_VERSION=1.2-mk-0.5
-LATTE_TARGZ=latte-$(LATTE_VERSION).tar.gz
+LATTE_TARGZ=$(top_srcdir)/latte-$(LATTE_VERSION).tar.gz
 LATTE_DIR=latte-$(LATTE_VERSION)
 
 INSTALL_DIR=$(CURDIR)/dest
@@ -53,12 +53,11 @@ export LDFLAGS
 all-local: build
 
 build: $(PACKAGES:%=build_%)
-clean: $(PACKAGES:%=clean_%)
+clean-local: $(PACKAGES:%=clean_%)
 	rm -f .built_*
-distclean: $(PACKAGES:%=distclean_%)
+distclean-local: $(PACKAGES:%=distclean_%)
 	rm -f .configured_* .built_*
 	rm -rf dest
-	find . -name "*~" -o -name ".*~" -o -name ".*#*" -o -name "*#*" | xargs rm -f
 	rm -rf */autom4te.cache
 
 .PHONY: $(PACKAGES:%=build_%) \
@@ -66,13 +65,17 @@ distclean: $(PACKAGES:%=distclean_%)
 	$(PACKAGES:%=distclean_%) \
 	$(PACKAGES:%=configure_%)
 
-# GMP.
+# GMP.  
+#
+# We do not give our CFLAGS and CXXFLAGS to GMP; it is easy to
+# miscompile GMP if we force it to use our values of these variables.
+
 build_gmp: .built_gmp
 configure_gmp: $(GMP_DIR)/config.status
 .unpacked_gmp: $(GMP_TARGZ)
 	$(TAR) xfz $(GMP_TARGZ) && touch $@
 $(GMP_DIR)/config.status: .unpacked_gmp
-	( cd $(GMP_DIR) && ./configure --prefix=$(INSTALL_DIR) --enable-cxx --disable-shared  $(GMP_CONFIGURE_OPTIONS) )
+	( cd $(GMP_DIR) && unset CFLAGS CXXFLAGS; ./configure --prefix=$(INSTALL_DIR) --enable-cxx --disable-shared  $(GMP_CONFIGURE_OPTIONS) )
 .built_gmp: $(GMP_DIR)/config.status
 	( cd $(GMP_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
 clean_gmp: 
@@ -88,13 +91,13 @@ configure_ntl: $(NTL_CONFIG_FILE)
 .unpacked_ntl: $(NTL_TARGZ)
 	$(TAR) xfz $(NTL_TARGZ) && touch $@
 $(NTL_CONFIG_FILE): .unpacked_ntl .built_gmp
-	( cd $(NTL_DIR)/src && ./configure PREFIX=$(INSTALL_DIR) GMP_PREFIX=$(INSTALL_DIR) NTL_GMP_LIP=on ) 
+	( cd $(NTL_DIR)/src && ./configure CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" PREFIX=$(INSTALL_DIR) GMP_PREFIX=$(INSTALL_DIR) NTL_GMP_LIP=on ) 
 .built_ntl: $(NTL_CONFIG_FILE) .built_gmp
 	( cd $(NTL_DIR)/src && $(MAKE) setup1 && $(MAKE) setup2 && $(MAKE) setup3 && $(MAKE) setup4 && $(MAKE) ntl.a && $(MAKE) install ) && touch $@
 clean_ntl: 
-	-( rm -f .built_ntl && cd $(NTL_DIR) && $(MAKE) clean )
+	-( rm -f .built_ntl && cd $(NTL_DIR)/src && $(MAKE) clean )
 distclean_ntl: 
-	-( rm -f .built_ntl && cd $(NTL_DIR) && $(MAKE) distclean )
+	-( rm -f .built_ntl && cd $(NTL_DIR)/src && $(MAKE) clean; rm -f $(NTL_CONFIG_FILE) )
 
 # LiDIA.
 
@@ -116,7 +119,9 @@ distclean_lidia:
 	-( rm -f .built_lidia && cd $(LIDIA_DIR) && $(MAKE) distclean )
 
 # cddlib.
-
+#
+# cddlib 094b has a hard-coded location of GMP in /usr/local in its Makefile.am(!)
+# We work around this by passing LDFLAGS to both configure and make.
 build_cddlib: .built_cddlib
 configure_cddlib: $(CDDLIB_DIR)/config.status .built_gmp
 .unpacked_cddlib: $(CDDLIB_TARGZ)
@@ -124,9 +129,9 @@ configure_cddlib: $(CDDLIB_DIR)/config.status .built_gmp
 	  $(TAR) xfz $$a || exit 1; \
 	done && touch $@
 $(CDDLIB_DIR)/config.status: .unpacked_cddlib .built_gmp
-	( cd $(CDDLIB_DIR) && ./configure CXX=$(CC) CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" --prefix=$(INSTALL_DIR)  --disable-shared) 
+	( cd $(CDDLIB_DIR) && ./configure CXX="$(CC)" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" --prefix=$(INSTALL_DIR)  --disable-shared) 
 .built_cddlib: $(CDDLIB_DIR)/config.status .built_gmp
-	( cd $(CDDLIB_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
+	( cd $(CDDLIB_DIR) && $(MAKE) LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" && $(MAKE) install ) && touch $@
 clean_cddlib: 
 	-( rm -f .built_cddlib && cd $(CDDLIB_DIR) && $(MAKE) clean )
 distclean_cddlib: 
@@ -134,7 +139,7 @@ distclean_cddlib:
 
 # cdd+.
 
-CDDPLUS_VARIABLES=CC=$(CXX) LIBDIR=$(INSTALL_DIR)/lib GMPLIBDIR=$(INSTALL_DIR)/lib INCLUDEDIR=$(INSTALL_DIR)/include GMPINCLUDEDIR=$(INSTALL_DIR)/include OPTFLAGS="$(CXXFLAGS)"
+CDDPLUS_VARIABLES=CC="$(CXX)" LIBDIR=$(INSTALL_DIR)/lib GMPLIBDIR=$(INSTALL_DIR)/lib INCLUDEDIR=$(INSTALL_DIR)/include GMPINCLUDEDIR=$(INSTALL_DIR)/include OPTFLAGS="$(CXXFLAGS)"
 build_cddplus: .built_cddplus
 configure_cddplus: .unpacked_cddplus .built_gmp
 .unpacked_cddplus: $(CDDPLUS_TARGZ)
