@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(latte-corretto, 1.2-mk-0.5)
+AC_INIT(latte-corretto, 1.2-mk-0.5.1)
 AM_INIT_AUTOMAKE(foreign)
 AM_MAINTAINER_MODE
 AC_CONFIG_FILES([Makefile])
@@ -12,7 +12,10 @@ AC_CONFIG_FILES([Makefile])
 AC_CANONICAL_TARGET
 case ${target_cpu} in
 sparc) 
-       gmp_configure_options="ABI=32"
+       AC_CHECK_SIZEOF(void *)
+       if test x${ac_cv_sizeof_void_p} = x4; then
+              gmp_configure_options="ABI=32"
+       fi
        ;;
 esac
 AC_SUBST(GMP_CONFIGURE_OPTIONS, ${gmp_configure_options})
