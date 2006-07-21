@@ -1,0 +1,32 @@
+	This ChangeLog only describes the changes to the "LattE corretto"
+	distribution.   Changes to LattE macchiato itself are described
+	in the latte subdirectory.
+
+	
+2006-07-21  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	* Makefile.am, configure.ac, lidia-2.2.0-2.patch,
+	lidia-2.2.0.patch: Patch LiDIA 2.2.0 for making it work with GCC
+	4.1.1
+
+2006-07-20  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	* cdd+-077.patch: Patch CDD+ to make it work with GCC 4.1.1
+
+2006-07-16  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	* Makefile.am: Upgrade GMP from 4.1.4 to 4.2.1.  Enable
+	out-of-source builds.  Quoting fixes for CC and CXX variables.
+	Don't pass CFLAGS and CXXFLAGS to GMP configuration.  Fix clean
+	and distclean targets.
+
+	* configure.ac [SPARC]: Only pass ABI=32 to GMP configure if we
+	compile for 32-bit mode.
+
+2006-07-08  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	Version 1.2-mk-0.5.1
+	
+2006-07-06  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	Version 1.2-mk-0.5
