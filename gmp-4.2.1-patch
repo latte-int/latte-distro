@@ -1,0 +1,100 @@
+diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/ismpf.cc gmp-4.2.1/cxx/ismpf.cc
+*** /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/ismpf.cc	Tue Mar 14 16:57:54 2006
+--- gmp-4.2.1/cxx/ismpf.cc	Fri Jul 21 16:18:35 2006
+***************
+*** 52,58 ****
+    // C++ decimal point
+  #if HAVE_STD__LOCALE
+    const locale& loc = i.getloc();
+!   char point_char = use_facet< numpunct<char> >(loc).decimal_point();
+  #else
+    const char *point = lconv_point;
+    char point_char = *point;
+--- 57,69 ----
+    // C++ decimal point
+  #if HAVE_STD__LOCALE
+    const locale& loc = i.getloc();
+!   char point_char = 
+! #ifndef _RWSTD_NO_TEMPLATE_ON_RETURN_TYPE
+!     use_facet< numpunct<char> >(loc)
+! #else
+!     use_facet(loc,(numpunct<char>*)0)
+! #endif
+!     .decimal_point();
+  #else
+    const char *point = lconv_point;
+    char point_char = *point;
+***************
+*** 64,70 ****
+      {
+        // C++ isspace
+  #if HAVE_STD__LOCALE
+!       const ctype<char>& ct = use_facet< ctype<char> >(loc);
+  #define cxx_isspace(c)  (ct.is(ctype_base::space,(c)))
+  #else
+  #define cxx_isspace(c)  isspace(c)
+--- 75,86 ----
+      {
+        // C++ isspace
+  #if HAVE_STD__LOCALE
+!       const ctype<char>& ct =
+! #ifndef _RWSTD_NO_TEMPLATE_ON_RETURN_TYPE
+!       use_facet< ctype<char> >(loc);
+! #else
+!       use_facet(loc,(ctype<char>*)0);
+! #endif
+  #define cxx_isspace(c)  (ct.is(ctype_base::space,(c)))
+  #else
+  #define cxx_isspace(c)  isspace(c)
+diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/ismpz.cc gmp-4.2.1/cxx/ismpz.cc
+*** /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/ismpz.cc	Tue Mar 14 16:57:54 2006
+--- gmp-4.2.1/cxx/ismpz.cc	Fri Jul 21 16:19:14 2006
+***************
+*** 40,46 ****
+    if (i.flags() & ios::skipws) // skip initial whitespace
+      {
+  #if HAVE_STD__LOCALE
+!       const ctype<char>& ct = use_facet< ctype<char> >(i.getloc());
+  #define cxx_isspace(c)  (ct.is(ctype_base::space,(c)))
+  #else
+  #define cxx_isspace(c)  isspace(c)
+--- 40,52 ----
+    if (i.flags() & ios::skipws) // skip initial whitespace
+      {
+  #if HAVE_STD__LOCALE
+!       const ctype<char>& ct =
+! #ifndef _RWSTD_NO_TEMPLATE_ON_RETURN_TYPE
+! 	use_facet< ctype<char> >(i.getloc());
+! #else
+!       use_facet(i.getloc(),(ctype<char>*)0);
+! #endif
+! 
+  #define cxx_isspace(c)  (ct.is(ctype_base::space,(c)))
+  #else
+  #define cxx_isspace(c)  isspace(c)
+diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/osmpf.cc gmp-4.2.1/cxx/osmpf.cc
+*** /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/osmpf.cc	Tue Mar 14 16:57:54 2006
+--- gmp-4.2.1/cxx/osmpf.cc	Fri Jul 21 16:20:56 2006
+***************
+*** 46,52 ****
+  
+  #if HAVE_STD__LOCALE
+    char  point[2];
+!   point[0] = use_facet< numpunct<char> >(o.getloc()).decimal_point();
+    point[1] = '\0';
+  #else
+    const char *point = localeconv()->decimal_point;
+--- 50,62 ----
+  
+  #if HAVE_STD__LOCALE
+    char  point[2];
+!   point[0] =
+! #ifndef _RWSTD_NO_TEMPLATE_ON_RETURN_TYPE
+!     use_facet< numpunct<char> >(o.getloc())
+! #else
+!     use_facet(o.getloc(),(numpunct<char>*)0)
+! #endif
+!     .decimal_point();
+    point[1] = '\0';
+  #else
+    const char *point = localeconv()->decimal_point;
