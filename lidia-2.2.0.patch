@@ -1,0 +1,672 @@
+
+[LiDIA] error while compiling Lidia with gcc 4.1.0 in Suse Linux 10.1
+LiDIA Administrator lidiaadm at cdc.informatik.tu-darmstadt.de
+Fri Jun 30 18:10:41 CEST 2006
+
+Hi,
+
+On Fri, Jun 23, 2006 at 03:00:14PM -0700, Ernesto Estevez Rams wrote:
+> I get several errors while compiling Lidia in gcc 4.1.0. First there was
+> errors over the use of an  "assign" function  error which I could solve
+> relacing by "this->assign".
+
+dependent name lookup again... It's fixed now in CVS.
+
+> Now I get:
+> 
+> ../../src/gec/prime_proof/prime_proof_ecpp_is_good_order.cc: In member function ?LiDIA::bigint LiDIA::prime_proof::pollard_rho(LiDIA::bigint&)?:
+> ../../src/gec/prime_proof/prime_proof_ecpp_is_good_order.cc:325: error: ?PollardRho? was not declared in this scope
+
+Another legacy issue; it didn't cause problems before since g++ used to inject
+friend declarations into the surrounding namespace.
+
+Can you test the applied patch and report back, please? (This patch also
+contains the patch I posted this morning in response to Shunsuke Tsuchioka's
+bug report.)
+
+Regards
+
+Christoph
+-- 
+FH Worms - University of Applied Sciences
+Fachbereich Informatik / Telekommunikation
+Erenburgerstr. 19, 67549 Worms, Germany
+-------------- next part --------------
+Index: ./src/base/include/LiDIA/base/sf_bigint.h
+===================================================================
+RCS file: /cdc/LiDIA4/lidiaadm/CVS/LiDIA/src/base/include/LiDIA/base/sf_bigint.h,v
+retrieving revision 2.12
+retrieving revision 2.12.2.3
+diff -u -u -r2.12 -r2.12.2.3
+--- ./src/base/include/LiDIA/base/sf_bigint.h	6 Mar 2006 12:08:36 -0000	2.12
++++ ./src/base/include/LiDIA/base/sf_bigint.h	30 Jun 2006 14:54:34 -0000	2.12.2.3
+@@ -9,7 +9,7 @@
+ //
+ //----------------------------------------------------------------------------------------------
+ //
+-//	$Id: sf_bigint.h,v 2.12 2006/03/06 12:08:36 lidiaadm Exp $
++//	$Id: sf_bigint.h,v 2.12.2.3 2006/06/30 14:54:34 lidiaadm Exp $
+ //
+ //	Author	: Emre Binisik (EB),  Volker Mueller (VM)
+ //	Changes	: See CVS log
+@@ -22,15 +22,9 @@
+ 
+ 
+ 
+-#ifndef LIDIA_BIGINT_H_GUARD_
+-# include	"LiDIA/bigint.h"
+-#endif
+-#ifndef LIDIA_BASE_FACTOR_H_GUARD_
+-# include	"LiDIA/base/base_factor.h"
+-#endif
+-#ifndef LIDIA_SINGLE_FACTOR_H_GUARD_
+-# include	"LiDIA/single_factor.h"
+-#endif
++#include	"LiDIA/bigint.h"
++#include	"LiDIA/base/base_factor.h"
++#include	"LiDIA/single_factor.h"
+ 
+ #include        <vector>
+ 
+@@ -128,17 +122,17 @@
+ 	factorization< bigint > TrialDiv(unsigned int upper_bound = 1000000,
+ 					 unsigned int lower_bound = 1);
+ 	friend factorization< bigint > TrialDiv(const bigint & N,
+-						const unsigned int upper_bound = 1000000,
+-						const unsigned int lower_bound = 1);
++						const unsigned int upper_bound,
++						const unsigned int lower_bound);
+ 
+ 	factorization< bigint > PollardRho(int size = 7);
+-	friend factorization< bigint > PollardRho(const bigint& x, int size = 7);
++	friend factorization< bigint > PollardRho(const bigint& x, int size);
+ 
+ 	factorization< bigint > PollardPminus1(int size = 9);
+-	friend factorization< bigint > PollardPminus1(const bigint& x, int size = 9);
++	friend factorization< bigint > PollardPminus1(const bigint& x, int size);
+ 
+ 	factorization< bigint > WilliamsPplus1(int size = 9);
+-	friend factorization< bigint > WilliamsPplus1(const bigint& x, int size = 9);
++	friend factorization< bigint > WilliamsPplus1(const bigint& x, int size);
+ 
+ 	factorization< bigint > Fermat();
+ 	friend factorization< bigint > Fermat(const bigint& x);
+@@ -146,16 +140,16 @@
+ 	factorization< bigint > ECM(int upper_bound = 34, int lower_bound = 6,
+ 				    int step = 3, bool jump_to_QS = false);
+ 	friend factorization< bigint > ECM(const bigint & x,
+-					   int upper_bound = 34,
+-					   int lower_bound = 6,
+-					   int step = 3);
++					   int upper_bound,
++					   int lower_bound,
++					   int step);
+ 
+ 	factorization< bigint > MPQS();
+ 	friend factorization< bigint > MPQS(const bigint & x);
+ 
+ 	factorization< bigint > factor(int size = 34) const;
+ 	friend factorization< bigint > sf_factor(const bigint & x,
+-						 int size = 34);
++						 int size);
+ 	factorization< bigint > completely_factor() const;
+ 	friend factorization< bigint > completely_factor(const bigint & x);
+ 
+@@ -237,6 +231,36 @@
+ {
+ 	a.swap(b);
+ }
++
++
++lidia_size_t ord_divide(const single_factor< bigint > & a,
++                        const single_factor< bigint > & b);
++
++void gcd (single_factor< bigint > & r, const single_factor< bigint > &a,
++          const single_factor< bigint > & b);
++
++factorization< bigint > TrialDiv(const bigint & N,
++                                 const unsigned int upper_bound = 1000000,
++                                 const unsigned int lower_bound = 1);
++
++factorization< bigint > PollardRho(const bigint& x, int size = 7);
++
++factorization< bigint > PollardPminus1(const bigint& x, int size = 9);
++
++factorization< bigint > WilliamsPplus1(const bigint& x, int size = 9);
++
++factorization< bigint > Fermat(const bigint& x);
++
++factorization< bigint > ECM(const bigint & x,
++                            int upper_bound = 34,
++                            int lower_bound = 6,
++                            int step = 3);
++
++factorization< bigint > MPQS(const bigint & x);
++
++factorization< bigint > sf_factor(const bigint & x,
++                                  int size = 34);
++factorization< bigint > completely_factor(const bigint & x);
+ 
+ 
+ 
+Index: ./src/base/include/LiDIA/sparse_field_matrix.h
+===================================================================
+RCS file: /cdc/LiDIA4/lidiaadm/CVS/LiDIA/src/base/include/LiDIA/sparse_field_matrix.h,v
+retrieving revision 2.7
+retrieving revision 2.7.2.1
+diff -u -u -r2.7 -r2.7.2.1
+--- ./src/base/include/LiDIA/sparse_field_matrix.h	15 Jun 2004 10:19:18 -0000	2.7
++++ ./src/base/include/LiDIA/sparse_field_matrix.h	30 Jun 2006 13:33:21 -0000	2.7.2.1
+@@ -9,7 +9,7 @@
+ //
+ //----------------------------------------------------------------------------------------------
+ //
+-//	$Id: sparse_field_matrix.h,v 2.7 2004/06/15 10:19:18 lidiaadm Exp $
++//	$Id: sparse_field_matrix.h,v 2.7.2.1 2006/06/30 13:33:21 lidiaadm Exp $
+ //
+ //	Author	: Patrick Theobald (PT)
+ //	Changes	: See CVS log
+@@ -97,7 +97,7 @@
+ 
+ 	sparse_field_matrix< T > & operator = (const sparse_field_matrix< T > &B)
+ 	{
+-		assign(B);
++		this->assign(B);
+ 		return *this;
+ 	}
+ 
+Index: ./src/base/include/LiDIA/sparse_base_matrix.h
+===================================================================
+RCS file: /cdc/LiDIA4/lidiaadm/CVS/LiDIA/src/base/include/LiDIA/sparse_base_matrix.h,v
+retrieving revision 2.6
+retrieving revision 2.6.2.1
+diff -u -u -r2.6 -r2.6.2.1
+--- ./src/base/include/LiDIA/sparse_base_matrix.h	15 Jun 2004 10:19:18 -0000	2.6
++++ ./src/base/include/LiDIA/sparse_base_matrix.h	30 Jun 2006 13:33:21 -0000	2.6.2.1
+@@ -9,7 +9,7 @@
+ //
+ //----------------------------------------------------------------------------------------------
+ //
+-//	$Id: sparse_base_matrix.h,v 2.6 2004/06/15 10:19:18 lidiaadm Exp $
++//	$Id: sparse_base_matrix.h,v 2.6.2.1 2006/06/30 13:33:21 lidiaadm Exp $
+ //
+ //	Author	: Patrick Theobald (PT)
+ //	Changes	: See CVS log
+@@ -427,7 +427,7 @@
+ 
+ 	sparse_base_matrix< T > & operator = (const sparse_base_matrix< T > &B)
+ 	{
+-		assign(B);
++		this->assign(B);
+ 		return *this;
+ 	}
+ 
+Index: ./src/base/include/LiDIA/field_matrix.h
+===================================================================
+RCS file: /cdc/LiDIA4/lidiaadm/CVS/LiDIA/src/base/include/LiDIA/field_matrix.h,v
+retrieving revision 2.6
+retrieving revision 2.6.2.1
+diff -u -u -r2.6 -r2.6.2.1
+--- ./src/base/include/LiDIA/field_matrix.h	15 Jun 2004 10:19:17 -0000	2.6
++++ ./src/base/include/LiDIA/field_matrix.h	30 Jun 2006 13:42:40 -0000	2.6.2.1
+@@ -9,7 +9,7 @@
+ //
+ //----------------------------------------------------------------------------------------------
+ //
+-//	$Id: field_matrix.h,v 2.6 2004/06/15 10:19:17 lidiaadm Exp $
++//	$Id: field_matrix.h,v 2.6.2.1 2006/06/30 13:42:40 lidiaadm Exp $
+ //
+ //	Author	: Patrick Theobald (PT)
+ //	Changes	: See CVS log
+@@ -132,7 +132,7 @@
+ 
+ 	field_matrix< T > & operator = (const field_matrix< T > &B)
+ 	{
+-		assign(B);
++		this->assign(B);
+ 		return *this;
+ 	}
+ 
+Index: ./src/base/include/LiDIA/dense_ring_matrix.h
+===================================================================
+RCS file: /cdc/LiDIA4/lidiaadm/CVS/LiDIA/src/base/include/LiDIA/dense_ring_matrix.h,v
+retrieving revision 2.6
+retrieving revision 2.6.2.1
+diff -u -u -r2.6 -r2.6.2.1
+--- ./src/base/include/LiDIA/dense_ring_matrix.h	15 Jun 2004 10:19:16 -0000	2.6
++++ ./src/base/include/LiDIA/dense_ring_matrix.h	30 Jun 2006 13:33:21 -0000	2.6.2.1
+@@ -9,7 +9,7 @@
+ //
+ //----------------------------------------------------------------------------------------------
+ //
+-//	$Id: dense_ring_matrix.h,v 2.6 2004/06/15 10:19:16 lidiaadm Exp $
++//	$Id: dense_ring_matrix.h,v 2.6.2.1 2006/06/30 13:33:21 lidiaadm Exp $
+ //
+ //	Author	: Patrick Theobald (PT)
+ //	Changes	: See CVS log
+@@ -91,7 +91,7 @@
+ 
+ 	dense_ring_matrix< T > & operator = (const dense_ring_matrix< T > &B)
+ 	{
+-		assign(B);
++		this->assign(B);
+ 		return *this;
+ 	}
+ 
+Index: ./src/base/include/LiDIA/dense_field_matrix.h
+===================================================================
+RCS file: /cdc/LiDIA4/lidiaadm/CVS/LiDIA/src/base/include/LiDIA/dense_field_matrix.h,v
+retrieving revision 2.8
+retrieving revision 2.8.2.1
+diff -u -u -r2.8 -r2.8.2.1
+--- ./src/base/include/LiDIA/dense_field_matrix.h	15 Jun 2004 10:19:16 -0000	2.8
++++ ./src/base/include/LiDIA/dense_field_matrix.h	30 Jun 2006 13:33:21 -0000	2.8.2.1
+@@ -9,7 +9,7 @@
+ //
+ //----------------------------------------------------------------------------------------------
+ //
+-//	$Id: dense_field_matrix.h,v 2.8 2004/06/15 10:19:16 lidiaadm Exp $
++//	$Id: dense_field_matrix.h,v 2.8.2.1 2006/06/30 13:33:21 lidiaadm Exp $
+ //
+ //	Author	: Patrick Theobald (PT)
+ //	Changes	: See CVS log
+@@ -93,9 +93,14 @@
+ 
+ 	dense_field_matrix< T > & operator = (const dense_field_matrix< T > &B)
+ 	{
+-		assign(B);
++		this->assign(B);
+ 		return *this;
+ 	}
++
++        void assign(const dense_field_matrix< T > &B)
++        {
++                dense_ring_matrix< T >::assign(B);
++        }
+ 
+ 	//
+ 	// division
+Index: ./src/base/include/LiDIA/ring_matrix.h
+===================================================================
+RCS file: /cdc/LiDIA4/lidiaadm/CVS/LiDIA/src/base/include/LiDIA/ring_matrix.h,v
+retrieving revision 2.6
+retrieving revision 2.6.2.2
+diff -u -u -r2.6 -r2.6.2.2
+--- ./src/base/include/LiDIA/ring_matrix.h	15 Jun 2004 10:19:18 -0000	2.6
++++ ./src/base/include/LiDIA/ring_matrix.h	30 Jun 2006 13:52:19 -0000	2.6.2.2
+@@ -9,7 +9,7 @@
+ //
+ //----------------------------------------------------------------------------------------------
+ //
+-//	$Id: ring_matrix.h,v 2.6 2004/06/15 10:19:18 lidiaadm Exp $
++//	$Id: ring_matrix.h,v 2.6.2.2 2006/06/30 13:52:19 lidiaadm Exp $
+ //
+ //	Author	: Patrick Theobald (PT)
+ //	Changes	: See CVS log
+@@ -122,10 +122,15 @@
+ 
+ 	ring_matrix< T > & operator = (const ring_matrix< T > &B)
+ 	{
+-		assign(B);
++		this->assign(B);
+ 		return *this;
+ 	}
+ 
++        void assign(const ring_matrix< T > &B)
++        {
++                base_matrix< T >::assign(B);
++        }
++
+ 	//////////////////////////////////
+ 	// BEGIN: arithmetic procedures //
+ 	//////////////////////////////////
+@@ -134,22 +139,6 @@
+ 	// addition
+ 	//
+ 
+-#if 0
+-public:
+-
+-	friend void add(ring_matrix< T > &,
+-			const ring_matrix< T > &,
+-			const ring_matrix< T > &);
+-
+-	friend void add(ring_matrix< T > &,
+-			const ring_matrix< T > &, const T &);
+-
+-	friend void add(ring_matrix< T > &,
+-			const T &, const ring_matrix< T > &);
+-
+-protected:
+-#endif
+-
+ 	void add(const ring_matrix< T > &, const ring_matrix< T > &);
+ 	void add(const ring_matrix< T > &, const T &);
+ 	void add(const T &, const ring_matrix< T > &);
+@@ -158,22 +147,6 @@
+ 	// subtraction
+ 	//
+ 
+-#if 0
+-public:
+-
+-	friend void subtract(ring_matrix< T > &,
+-			     const ring_matrix< T > &,
+-			     const ring_matrix< T > &);
+-
+-	friend void subtract(ring_matrix< T > &,
+-			     const ring_matrix< T > &, const T &);
+-
+-	friend void subtract(ring_matrix< T > &,
+-			     const T &, const ring_matrix< T > &);
+-
+-protected:
+-#endif
+-
+ 	void subtract(const ring_matrix< T > &, const ring_matrix< T > &);
+ 	void subtract(const ring_matrix< T > &, const T &);
+ 	void subtract(const T &, const ring_matrix< T > &);
+@@ -182,55 +155,13 @@
+ 	// multiplication
+ 	//
+ 
+-#if 0
+-public:
+-
+-	friend void multiply(ring_matrix< T > &,
+-			     const ring_matrix< T > &,
+-			     const ring_matrix< T > &);
+-
+-	friend void multiply(ring_matrix< T > &,
+-			     const ring_matrix< T > &, const T &);
+-
+-	friend void multiply(ring_matrix< T > &,
+-			     const T &, const ring_matrix< T > &);
+-
+-protected:
+-#endif
+-
+ 	void multiply(const ring_matrix< T > &, const ring_matrix< T > &);
+ 	void multiply(const ring_matrix< T > &, const T &);
+ 	void multiply(const T &, const ring_matrix< T > &);
+ 
+-#if 0
+-public:
+-
+-	friend void compwise_multiply(ring_matrix< T > &,
+-				      const ring_matrix< T > &,
+-				      const ring_matrix< T > &);
+-
+-protected:
+-#endif
+-
+ 	void compwise_multiply(const ring_matrix< T > &,
+ 			       const ring_matrix< T > &);
+ 
+-#if 0
+-public:
+-
+-	friend void multiply(T *&, const ring_matrix< T > &, const T *);
+-
+-	friend void multiply(T *&, const T *, const ring_matrix< T > &);
+-
+-	friend void multiply(math_vector< T > &, const ring_matrix< T > &,
+-			     const math_vector< T > &);
+-
+-	friend void multiply(math_vector< T > &, const math_vector< T > &,
+-			     const ring_matrix< T > &);
+-
+-protected:
+-#endif
+-
+ 	void multiply_right(T *&, const T *) const;
+ 	void multiply_right(math_vector< T > &, const math_vector< T > &) const;
+ 	void multiply_left(T *&, const T *) const;
+@@ -240,15 +171,6 @@
+ 	// negation
+ 	//
+ 
+-#if 0
+-public:
+-
+-	friend void negate(ring_matrix< T > &,
+-			   const ring_matrix< T > &);
+-
+-protected:
+-#endif
+-
+ 	void negate(const ring_matrix< T > &);
+ 
+ 	/////////////////////////////////
+@@ -260,82 +182,6 @@
+ 	// addition
+ 	//
+ 
+-#if 0
+-public:
+-
+-	friend ring_matrix< T > operator + (const ring_matrix< T > &, const ring_matrix< T > &);
+-
+-	friend ring_matrix< T > operator + (const ring_matrix< T > &, const T &);
+-
+-	friend ring_matrix< T > operator + (const T &, const ring_matrix< T > &);
+-
+-	friend ring_matrix< T > & operator += (ring_matrix< T > &, const ring_matrix< T > &);
+-
+-	friend ring_matrix< T > & operator += (ring_matrix< T > &, const T &);
+-
+-	//
+-	// subtraction
+-	//
+-
+-public:
+-
+-	friend ring_matrix< T > operator - (const ring_matrix< T > &,
+-					    const ring_matrix< T > &);
+-
+-	friend ring_matrix< T > operator - (const ring_matrix< T > &,
+-					    const T &);
+-
+-	friend ring_matrix< T > operator - (const T &,
+-					    const ring_matrix< T > &);
+-
+-	friend ring_matrix< T > & operator -= (ring_matrix< T > &,
+-					       const ring_matrix< T > &);
+-
+-	friend ring_matrix< T > & operator -= (ring_matrix< T > &,
+-					       const T &);
+-
+-	//
+-	// multiplication
+-	//
+-
+-public:
+-
+-	friend ring_matrix< T > operator * (const ring_matrix< T > &,
+-					    const ring_matrix< T > &);
+-
+-	friend ring_matrix< T > operator * (const ring_matrix< T > &,
+-					    const T &);
+-
+-	friend ring_matrix< T > operator * (const T &,
+-					    const ring_matrix< T > &);
+-
+-	friend T * operator * (const ring_matrix< T > &, const T *);
+-
+-	friend T * operator * (const T *, const ring_matrix< T > &);
+-
+-public:
+-
+-	friend math_vector< T > operator * (const ring_matrix< T > &,
+-					    const math_vector< T > &);
+-
+-	friend math_vector< T > operator * (const math_vector< T > &,
+-					    const ring_matrix< T > &);
+-
+-	friend ring_matrix< T > & operator *= (ring_matrix< T > &,
+-					       const ring_matrix< T > &);
+-
+-	friend ring_matrix< T > & operator *= (ring_matrix< T > &,
+-					       const T &);
+-	//
+-	// negation
+-	//
+-
+-public:
+-
+-	friend ring_matrix< T > operator - (const ring_matrix< T > &);
+-
+-#endif
+-
+ 	///////////////////////////////
+ 	// END: arithmetic operators //
+ 	///////////////////////////////
+@@ -958,7 +804,7 @@
+ 
+ 	ring_matrix< bigmod > & operator = (const ring_matrix< bigmod > &B)
+ 	{
+-		assign(B);
++		this->assign(B);
+ 		return *this;
+ 	}
+ 
+Index: ./src/base/include/LiDIA/base_matrix.h
+===================================================================
+RCS file: /cdc/LiDIA4/lidiaadm/CVS/LiDIA/src/base/include/LiDIA/base_matrix.h,v
+retrieving revision 2.7
+retrieving revision 2.7.2.1
+diff -u -u -r2.7 -r2.7.2.1
+--- ./src/base/include/LiDIA/base_matrix.h	15 Jun 2004 10:19:16 -0000	2.7
++++ ./src/base/include/LiDIA/base_matrix.h	30 Jun 2006 13:52:19 -0000	2.7.2.1
+@@ -9,7 +9,7 @@
+ //
+ //----------------------------------------------------------------------------------------------
+ //
+-//	$Id: base_matrix.h,v 2.7 2004/06/15 10:19:16 lidiaadm Exp $
++//	$Id: base_matrix.h,v 2.7.2.1 2006/06/30 13:52:19 lidiaadm Exp $
+ //
+ //	Author	: Patrick Theobald (PT)
+ //	Changes	: See CVS log
+@@ -469,7 +469,7 @@
+ 
+ 	base_matrix< T > & operator = (const base_matrix< T > &B)
+ 	{
+-		assign(B);
++		this->assign(B);
+ 		return *this;
+ 	}
+ 
+@@ -1170,7 +1170,7 @@
+ 
+ 	base_matrix< bigmod > & operator = (const base_matrix< bigmod > &B)
+ 	{
+-		assign(B);
++		this->assign(B);
+ 		return *this;
+ 	}
+ 
+Index: ./src/base/include/LiDIA/sparse_ring_matrix.h
+===================================================================
+RCS file: /cdc/LiDIA4/lidiaadm/CVS/LiDIA/src/base/include/LiDIA/sparse_ring_matrix.h,v
+retrieving revision 2.6
+retrieving revision 2.6.2.1
+diff -u -u -r2.6 -r2.6.2.1
+--- ./src/base/include/LiDIA/sparse_ring_matrix.h	15 Jun 2004 10:19:19 -0000	2.6
++++ ./src/base/include/LiDIA/sparse_ring_matrix.h	30 Jun 2006 13:33:21 -0000	2.6.2.1
+@@ -9,7 +9,7 @@
+ //
+ //----------------------------------------------------------------------------------------------
+ //
+-//	$Id: sparse_ring_matrix.h,v 2.6 2004/06/15 10:19:19 lidiaadm Exp $
++//	$Id: sparse_ring_matrix.h,v 2.6.2.1 2006/06/30 13:33:21 lidiaadm Exp $
+ //
+ //	Author	: Patrick Theobald (PT)
+ //	Changes	: See CVS log
+@@ -103,7 +103,7 @@
+ 
+ 	sparse_ring_matrix< T > & operator = (const sparse_ring_matrix< T > &B)
+ 	{
+-		assign(B);
++		this->assign(B);
+ 		return *this;
+ 	}
+ 
+Index: ./src/base/include/LiDIA/matrix/sparse_ring_matrix_kernel.cc
+===================================================================
+RCS file: /cdc/LiDIA4/lidiaadm/CVS/LiDIA/src/base/include/LiDIA/matrix/sparse_ring_matrix_kernel.cc,v
+retrieving revision 2.8
+retrieving revision 2.8.2.1
+diff -u -u -r2.8 -r2.8.2.1
+--- ./src/base/include/LiDIA/matrix/sparse_ring_matrix_kernel.cc	15 Jun 2004 10:19:20 -0000	2.8
++++ ./src/base/include/LiDIA/matrix/sparse_ring_matrix_kernel.cc	30 Jun 2006 14:13:45 -0000	2.8.2.1
+@@ -8,7 +8,7 @@
+ //
+ //----------------------------------------------------------------------------------------------
+ //
+-//	$Id: sparse_ring_matrix_kernel.cc,v 2.8 2004/06/15 10:19:20 lidiaadm Exp $
++//	$Id: sparse_ring_matrix_kernel.cc,v 2.8.2.1 2006/06/30 14:13:45 lidiaadm Exp $
+ //
+ //	Author	: Patrick Theobald (PT)
+ //	Changes	: See CVS log
+@@ -154,7 +154,7 @@
+ 	lidia_size_t counter;
+ 
+ 	if (a == RES.Zero)
+-		assign(RES, M);
++		this->assign(RES, M);
+ 	else
+ 		for (i = 0; i < RES.rows; i++) {
+ 			// Memory allocation
+@@ -220,7 +220,7 @@
+ 	lidia_size_t counter;
+ 
+ 	if (a == RES.Zero)
+-		assign(RES, M);
++		this->assign(RES, M);
+ 	else
+ 		for (i = 0; i < RES.rows; i++) {
+ 			// Memory allocation
+@@ -371,7 +371,7 @@
+ 	lidia_size_t counter;
+ 
+ 	if (a == RES.Zero)
+-		assign(RES, M);
++		this->assign(RES, M);
+ 	else
+ 		for (i = 0; i < RES.rows; i++) {
+ 			// Memory allocation
+@@ -437,7 +437,7 @@
+ 	lidia_size_t counter;
+ 
+ 	if (a == RES.Zero)
+-		assign(RES, M);
++		this->assign(RES, M);
+ 	else
+ 		for (i = 0; i < RES.rows; i++) {
+ 			// Memory allocation
+Index: ./src/linear_algebra/include/LiDIA/matrix/dense_bigint_matrix_modules.cc
+===================================================================
+RCS file: /cdc/LiDIA4/lidiaadm/CVS/LiDIA/src/linear_algebra/include/LiDIA/matrix/dense_bigint_matrix_modules.cc,v
+retrieving revision 2.10
+retrieving revision 2.10.2.1
+diff -u -u -r2.10 -r2.10.2.1
+--- ./src/linear_algebra/include/LiDIA/matrix/dense_bigint_matrix_modules.cc	15 Jun 2004 10:19:54 -0000	2.10
++++ ./src/linear_algebra/include/LiDIA/matrix/dense_bigint_matrix_modules.cc	30 Jun 2006 09:14:56 -0000	2.10.2.1
+@@ -8,7 +8,7 @@
+ //
+ //----------------------------------------------------------------------------------------------
+ //
+-//	$Id: dense_bigint_matrix_modules.cc,v 2.10 2004/06/15 10:19:54 lidiaadm Exp $
++//	$Id: dense_bigint_matrix_modules.cc,v 2.10.2.1 2006/06/30 09:14:56 lidiaadm Exp $
+ //
+ //	Author	: Patrick Theobald (PT)
+ //	Changes	: See CVS log
+@@ -2210,7 +2210,7 @@
+ column_oriented_dense_matrix_modules< T >::pivot_sorting_gcd (const MR< T > &A,
+ 							      lidia_size_t startr,
+ 							      lidia_size_t startc,
+-							      lidia_size_t &pos) const
++							      lidia_size_t &index) const
+ {
+ 	lidia_size_t FOUND = 0;
+ 	lidia_size_t index_largest = 0;

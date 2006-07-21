@@ -101,22 +101,27 @@ distclean_ntl:
 
 # LiDIA.
 
-build_lidia: .built_lidia
+build_lidia: $(LIDIA_DIR)/.built_lidia
 configure_lidia: $(LIDIA_DIR)/config.status .built_gmp
-.unpacked_lidia: $(LIDIA_TARGZ)
-	for a in $(LIDIA_TARGZ); do \
-	  $(TAR) xfz $$a || exit 1; \
-	done && touch $@
-$(LIDIA_DIR)/config.status: .unpacked_lidia .built_gmp
+$(LIDIA_DIR)/.unpacked_lidia: $(LIDIA_TARGZ)
+	for a in $(LIDIA_TARGZ); do					\
+	  $(TAR) xfz $$a || exit 1;					\
+	done 								\
+	&& (cd $(LIDIA_DIR)						\
+		&& $(PATCH) -t -p0) < $(top_srcdir)/lidia-2.2.0.patch 	\
+	&& (cd $(LIDIA_DIR)						\
+		&& $(PATCH) -t -p0) < $(top_srcdir)/lidia-2.2.0-2.patch	\
+	&& touch $@
+$(LIDIA_DIR)/config.status: $(LIDIA_DIR)/.unpacked_lidia .built_gmp
 	( cd $(LIDIA_DIR) && ./configure --with-arithmetic=gmp --disable-nf --disable-ec --disable-eco --disable-gec --with-extra-includes=$(INSTALL_DIR)/include --with-extra-libs=$(INSTALL_DIR)/lib --prefix=$(INSTALL_DIR)  --disable-shared) 
 # LiDIA 2.2.0 installs its headers into lidia/ but expects them in LiDIA!?!
 # So we make a symbolic link, just in case.
-.built_lidia: $(LIDIA_DIR)/config.status .built_gmp
+$(LIDIA_DIR)/.built_lidia: $(LIDIA_DIR)/config.status .built_gmp
 	( cd $(LIDIA_DIR) && $(MAKE) && $(MAKE) install ) && ( cd $(INSTALL_DIR)/include && ln -s lidia LiDIA || true ) && touch $@
 clean_lidia: 
-	-( rm -f .built_lidia && cd $(LIDIA_DIR) && $(MAKE) clean )
+	-( rm -f $(LIDIA_DIR)/.built_lidia && cd $(LIDIA_DIR) && $(MAKE) clean )
 distclean_lidia: 
-	-( rm -f .built_lidia && cd $(LIDIA_DIR) && $(MAKE) distclean )
+	-( rm -f $(LIDIA_DIR)/.built_lidia && cd $(LIDIA_DIR) && $(MAKE) distclean )
 
 # cddlib.
 #
@@ -143,9 +148,11 @@ CDDPLUS_VARIABLES=CC="$(CXX)" LIBDIR=$(INSTALL_DIR)/lib GMPLIBDIR=$(INSTALL_DIR)
 build_cddplus: .built_cddplus
 configure_cddplus: .unpacked_cddplus .built_gmp
 .unpacked_cddplus: $(CDDPLUS_TARGZ)
-	for a in $(CDDPLUS_TARGZ); do \
-	  $(TAR) xfz $$a || exit 1; \
-	done && touch $@
+	for a in $(CDDPLUS_TARGZ); do						\
+	  $(TAR) xfz $$a || exit 1;						\
+	done									\
+	&& (cd $(CDDPLUS_DIR) && $(PATCH) -p1) < $(top_srcdir)/cdd+-077.patch 	\
+	&& touch $@
 .built_cddplus: .unpacked_cddplus .built_gmp
 	( cd $(CDDPLUS_DIR) && $(MAKE) $(CDDPLUS_VARIABLES) cddr+ cddf+ && $(mkinstalldirs) $(INSTALL_DIR)/bin && $(INSTALL) cddr+ cddf+ $(INSTALL_DIR)/bin ) && touch $@
 clean_cddplus: 
@@ -156,14 +163,14 @@ distclean_cddplus:
 # LattE.
 
 build_latte: .built_latte
-configure_latte: $(LATTE_DIR)/config.status .built_gmp .built_cddlib .built_cddplus .built_lidia .built_ntl
+configure_latte: $(LATTE_DIR)/config.status .built_gmp .built_cddlib .built_cddplus $(LIDIA_DIR)/.built_lidia .built_ntl
 .unpacked_latte: $(LATTE_TARGZ)
 	for a in $(LATTE_TARGZ); do \
 	  $(TAR) xfz $$a || exit 1; \
 	done && touch $@
-$(LATTE_DIR)/config.status: .unpacked_latte .built_gmp .built_cddlib .built_cddplus .built_lidia .built_ntl
+$(LATTE_DIR)/config.status: .unpacked_latte .built_gmp .built_cddlib .built_cddplus $(LIDIA_DIR)/.built_lidia .built_ntl
 	( cd $(LATTE_DIR) && ./configure --with-default=$(INSTALL_DIR) --prefix=$(INSTALL_DIR) ) 
-.built_latte: $(LATTE_DIR)/config.status .built_gmp .built_cddlib .built_cddplus .built_lidia .built_ntl
+.built_latte: $(LATTE_DIR)/config.status .built_gmp .built_cddlib .built_cddplus $(LIDIA_DIR)/.built_lidia .built_ntl
 	( cd $(LATTE_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
 clean_latte: 
 	-( rm -f .built_latte && cd $(LATTE_DIR) && $(MAKE) clean )
