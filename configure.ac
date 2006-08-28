@@ -34,9 +34,10 @@ AC_LANG(C++)
 AX_COMPILER_VENDOR
 AX_CXX_MAXOPT
 
-enable_LIDIA=yes
-AC_ARG_ENABLE(LIDIA, AS_HELP_STRING([--disable-lidia],
-				[Do not use the non-free library LiDIA.]))
-AC_SUBST(ENABLE_LIDIA, ${enable_LIDIA})
+AC_ARG_ENABLE(lidia, AS_HELP_STRING([--disable-lidia],
+				[Do not use the non-free library LiDIA.]), , 
+		[enable_lidia=yes])
+AC_SUBST(ENABLE_LIDIA, ${enable_lidia})
+AM_CONDITIONAL(ENABLE_LIDIA, test x${enable_lidia} = xyes)
 
 AC_OUTPUT

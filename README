@@ -9,14 +9,17 @@ To build:
    ./configure
    make
 
+This release of LattE corretto has successfully built on:
+
+  * Solaris/SPARC in 32-bit mode with GCC 3.3.2
+  * Solaris/SPARC in 64-bit mode with GCC 4.1.1
+
 Some of the C++ libraries are very picky about the version of the C++
-compiler.  It works with GCC 3.3.2 and 3.3.4.  Older ones or newer
-ones might not work.  To ensure a specific compiler is used, type:
+compiler.  Older ones or newer ones might not work.  To ensure a
+specific compiler is used, type:
 
    ./configure CC=/path/to/your/gcc CXX=/path/to/your/g++
    make
-
-In particluar, cdd+ does not seem to compile with GCC 3.4.5.
 
 The pickiest of all C++ libraries used is LiDIA.  As a last resort,
 you can turn off using LiDIA:

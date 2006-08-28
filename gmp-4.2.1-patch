@@ -1,6 +1,6 @@
 diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/ismpf.cc gmp-4.2.1/cxx/ismpf.cc
 *** /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/ismpf.cc	Tue Mar 14 16:57:54 2006
---- gmp-4.2.1/cxx/ismpf.cc	Fri Jul 21 16:18:35 2006
+--- gmp-4.2.1/cxx/ismpf.cc	Fri Jul 21 16:30:05 2006
 ***************
 *** 52,58 ****
     // C++ decimal point
@@ -10,7 +10,7 @@ diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/ismpf.cc gmp-4.2.1/cx
   #else
     const char *point = lconv_point;
     char point_char = *point;
---- 57,69 ----
+--- 52,64 ----
     // C++ decimal point
   #if HAVE_STD__LOCALE
     const locale& loc = i.getloc();
@@ -33,7 +33,7 @@ diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/ismpf.cc gmp-4.2.1/cx
   #define cxx_isspace(c)  (ct.is(ctype_base::space,(c)))
   #else
   #define cxx_isspace(c)  isspace(c)
---- 75,86 ----
+--- 70,81 ----
       {
         // C++ isspace
   #if HAVE_STD__LOCALE
@@ -48,7 +48,7 @@ diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/ismpf.cc gmp-4.2.1/cx
   #define cxx_isspace(c)  isspace(c)
 diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/ismpz.cc gmp-4.2.1/cxx/ismpz.cc
 *** /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/ismpz.cc	Tue Mar 14 16:57:54 2006
---- gmp-4.2.1/cxx/ismpz.cc	Fri Jul 21 16:19:14 2006
+--- gmp-4.2.1/cxx/ismpz.cc	Fri Jul 21 16:30:05 2006
 ***************
 *** 40,46 ****
     if (i.flags() & ios::skipws) // skip initial whitespace
@@ -74,7 +74,7 @@ diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/ismpz.cc gmp-4.2.1/cx
   #define cxx_isspace(c)  isspace(c)
 diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/osmpf.cc gmp-4.2.1/cxx/osmpf.cc
 *** /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/osmpf.cc	Tue Mar 14 16:57:54 2006
---- gmp-4.2.1/cxx/osmpf.cc	Fri Jul 21 16:20:56 2006
+--- gmp-4.2.1/cxx/osmpf.cc	Fri Jul 21 16:30:05 2006
 ***************
 *** 46,52 ****
   
@@ -84,7 +84,7 @@ diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/osmpf.cc gmp-4.2.1/cx
     point[1] = '\0';
   #else
     const char *point = localeconv()->decimal_point;
---- 50,62 ----
+--- 46,58 ----
   
   #if HAVE_STD__LOCALE
     char  point[2];
@@ -98,3 +98,39 @@ diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/cxx/osmpf.cc gmp-4.2.1/cx
     point[1] = '\0';
   #else
     const char *point = localeconv()->decimal_point;
+diff -c -r /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/gmpxx.h gmp-4.2.1/gmpxx.h
+*** /home/mkoeppe/w/latte/distro/gmp-4.2.1.orig/gmpxx.h	Sat Apr  8 21:15:38 2006
+--- gmp-4.2.1/gmpxx.h	Fri Jul 21 17:04:03 2006
+***************
+*** 1379,1391 ****
+  /* this is much the same as gmp_allocated_string in gmp-impl.h
+     since gmp-impl.h is not publicly available, I redefine it here
+     I use a different name to avoid possible clashes */
+  struct __gmp_alloc_cstring
+  {
+    char *str;
+    __gmp_alloc_cstring(char *s) { str = s; }
+    ~__gmp_alloc_cstring()
+    {
+!     void (*freefunc) (void *, size_t);
+      mp_get_memory_functions (NULL, NULL, &freefunc);
+      (*freefunc) (str, std::strlen(str)+1);
+    }
+--- 1379,1395 ----
+  /* this is much the same as gmp_allocated_string in gmp-impl.h
+     since gmp-impl.h is not publicly available, I redefine it here
+     I use a different name to avoid possible clashes */
++ extern "C" {
++   typedef void (*__gmp_alloc_cstring_freefunc) (void *, size_t);
++ }
++ 
+  struct __gmp_alloc_cstring
+  {
+    char *str;
+    __gmp_alloc_cstring(char *s) { str = s; }
+    ~__gmp_alloc_cstring()
+    {
+!     __gmp_alloc_cstring_freefunc freefunc;
+      mp_get_memory_functions (NULL, NULL, &freefunc);
+      (*freefunc) (str, std::strlen(str)+1);
+    }
