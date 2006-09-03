@@ -5,6 +5,10 @@
 	
 2006-07-21  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
 
+	* gmp-4.2.1-patch: Patch to make GMP 4.2.1 work with Sun Studio 11
+
+2006-07-21  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
 	* Makefile.am, configure.ac, lidia-2.2.0-2.patch,
 	lidia-2.2.0.patch: Patch LiDIA 2.2.0 for making it work with GCC
 	4.1.1
