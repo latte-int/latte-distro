@@ -29,7 +29,7 @@ LIDIA_VERSION=2.2.0
 LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-FF-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-LA-$(LIDIA_VERSION).tar.gz
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
-LATTE_VERSION=1.2-mk-0.5
+LATTE_VERSION=1.2-mk-0.6
 LATTE_TARGZ=$(top_srcdir)/latte-$(LATTE_VERSION).tar.gz
 LATTE_DIR=latte-$(LATTE_VERSION)
 
