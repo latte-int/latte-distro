@@ -12,7 +12,8 @@ To build:
 This release of LattE corretto has successfully built on:
 
   * Solaris/SPARC in 32-bit mode with GCC 3.3.2
-  * Solaris/SPARC in 64-bit mode with GCC 4.1.1
+  * Solaris/SPARC in 32-bit mode and 64-bit mode with GCC 4.1.1
+  * Debian GNU/Linux on x86 with GCC 3.3.2
 
 Some of the C++ libraries are very picky about the version of the C++
 compiler.  Older ones or newer ones might not work.  To ensure a
