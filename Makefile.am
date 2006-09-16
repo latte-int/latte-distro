@@ -68,6 +68,9 @@ distclean-local: $(PACKAGES:%=distclean_%)
 	$(PACKAGES:%=distclean_%) \
 	$(PACKAGES:%=configure_%)
 
+EXTRA_DIST=$(GMP_TARGZ) $(CDDPLUS_TARGZ) $(CDDLIB_TARGZ) $(NTL_TARGZ)  \
+	$(LIDIA_TARGZ) $(LATTE_TARGZ)
+
 # GMP.  
 #
 # We do not give our CFLAGS and CXXFLAGS to GMP; it is easy to
@@ -75,6 +78,7 @@ distclean-local: $(PACKAGES:%=distclean_%)
 
 build_gmp: $(GMP_DIR)/.built_gmp
 configure_gmp: $(GMP_DIR)/config.status
+EXTRA_DIST += gmp-4.2.1-patch
 $(GMP_DIR)/.unpacked_gmp: $(GMP_TARGZ)
 	$(TAR) xfz $(GMP_TARGZ)							\
 	&& (cd $(GMP_DIR) && patch -t -p1 ) < $(top_srcdir)/gmp-4.2.1-patch	\
@@ -108,6 +112,7 @@ distclean_ntl:
 
 build_lidia: $(LIDIA_DIR)/.built_lidia
 configure_lidia: $(LIDIA_DIR)/config.status $(GMP_DIR)/.built_gmp
+EXTRA_DIST += lidia-2.2.0.patch lidia-2.2.0-2.patch
 $(LIDIA_DIR)/.unpacked_lidia: $(LIDIA_TARGZ)
 	for a in $(LIDIA_TARGZ); do					\
 	  $(TAR) xfz $$a || exit 1;					\
@@ -152,6 +157,7 @@ distclean_cddlib:
 CDDPLUS_VARIABLES=CC="$(CXX)" LIBDIR=$(INSTALL_DIR)/lib GMPLIBDIR=$(INSTALL_DIR)/lib INCLUDEDIR=$(INSTALL_DIR)/include GMPINCLUDEDIR=$(INSTALL_DIR)/include OPTFLAGS="$(CXXFLAGS)"
 build_cddplus: $(CDDPLUS_DIR)/.built_cddplus
 configure_cddplus: .unpacked_cddplus $(GMP_DIR)/.built_gmp
+EXTRA_DIST += cdd+-077.patch
 .unpacked_cddplus: $(CDDPLUS_TARGZ)
 	for a in $(CDDPLUS_TARGZ); do						\
 	  $(TAR) xfz $$a || exit 1;						\
@@ -190,5 +196,3 @@ distclean_latte:
 
 ## Maintainer targets
 
-EXTRA_DIST=$(GMP_TARGZ) $(CDDPLUS_TARGZ) $(CDDLIB_TARGZ) $(NTL_TARGZ)  \
-	$(LIDIA_TARGZ) $(LATTE_TARGZ)
