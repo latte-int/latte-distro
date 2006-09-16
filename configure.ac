@@ -7,18 +7,7 @@ AM_INIT_AUTOMAKE(foreign)
 AM_MAINTAINER_MODE
 AC_CONFIG_FILES([Makefile])
 
-# For Solaris/SPARC, we need to request ABI=32 for GMP builds
-# because it will build a 64-bit library instead.
 AC_CANONICAL_TARGET
-case ${target_cpu} in
-sparc) 
-       AC_CHECK_SIZEOF(void *)
-       if test x${ac_cv_sizeof_void_p} = x4; then
-              gmp_configure_options="ABI=32"
-       fi
-       ;;
-esac
-AC_SUBST(GMP_CONFIGURE_OPTIONS, ${gmp_configure_options})
 
 AC_PROG_CC
 AC_PROG_CXX
@@ -39,5 +28,17 @@ AC_ARG_ENABLE(lidia, AS_HELP_STRING([--disable-lidia],
 		[enable_lidia=yes])
 AC_SUBST(ENABLE_LIDIA, ${enable_lidia})
 AM_CONDITIONAL(ENABLE_LIDIA, test x${enable_lidia} = xyes)
+
+# For Solaris/SPARC, we need to request ABI=32 for GMP builds
+# because it will build a 64-bit library instead.
+case ${target_cpu} in
+sparc) 
+       AC_CHECK_SIZEOF(void *)
+       if test x${ac_cv_sizeof_void_p} = x4; then
+              gmp_configure_options="ABI=32"
+       fi
+       ;;
+esac
+AC_SUBST(GMP_CONFIGURE_OPTIONS, ${gmp_configure_options})
 
 AC_OUTPUT
