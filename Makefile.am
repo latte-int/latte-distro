@@ -80,7 +80,7 @@ build_gmp: $(GMP_DIR)/.built_gmp
 configure_gmp: $(GMP_DIR)/config.status
 EXTRA_DIST += gmp-4.2.1-patch
 $(GMP_DIR)/.unpacked_gmp: $(GMP_TARGZ)
-	$(TAR) xfz $(GMP_TARGZ)							\
+	gunzip < $(GMP_TARGZ) | $(TAR) xf - 					\
 	&& (cd $(GMP_DIR) && patch -t -p1 ) < $(top_srcdir)/gmp-4.2.1-patch	\
 	&& touch $@
 $(GMP_DIR)/config.status: $(GMP_DIR)/.unpacked_gmp
@@ -98,7 +98,7 @@ NTL_CONFIG_FILE=$(NTL_DIR)/src/makefile
 build_ntl: .built_ntl
 configure_ntl: $(NTL_CONFIG_FILE)
 .unpacked_ntl: $(NTL_TARGZ)
-	$(TAR) xfz $(NTL_TARGZ) && touch $@
+	gunzip < $(NTL_TARGZ) | $(TAR) xf - && touch $@
 $(NTL_CONFIG_FILE): .unpacked_ntl $(GMP_DIR)/.built_gmp
 	( cd $(NTL_DIR)/src && ./configure CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" PREFIX=$(INSTALL_DIR) GMP_PREFIX=$(INSTALL_DIR) NTL_GMP_LIP=on ) 
 .built_ntl: $(NTL_CONFIG_FILE) $(GMP_DIR)/.built_gmp
@@ -115,7 +115,7 @@ configure_lidia: $(LIDIA_DIR)/config.status $(GMP_DIR)/.built_gmp
 EXTRA_DIST += lidia-2.2.0.patch lidia-2.2.0-2.patch
 $(LIDIA_DIR)/.unpacked_lidia: $(LIDIA_TARGZ)
 	for a in $(LIDIA_TARGZ); do					\
-	  $(TAR) xfz $$a || exit 1;					\
+	  gunzip < $$a | $(TAR) xf - || exit 1;				\
 	done 								\
 	&& (cd $(LIDIA_DIR)						\
 		&& $(PATCH) -t -p0) < $(top_srcdir)/lidia-2.2.0.patch 	\
@@ -141,7 +141,7 @@ build_cddlib: .built_cddlib
 configure_cddlib: $(CDDLIB_DIR)/config.status $(GMP_DIR)/.built_gmp
 .unpacked_cddlib: $(CDDLIB_TARGZ)
 	for a in $(CDDLIB_TARGZ); do \
-	  $(TAR) xfz $$a || exit 1; \
+	  gunzip < $$a | $(TAR) xf - || exit 1; \
 	done && touch $@
 $(CDDLIB_DIR)/config.status: .unpacked_cddlib $(GMP_DIR)/.built_gmp
 	( cd $(CDDLIB_DIR) && ./configure CXX="$(CC)" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" --prefix=$(INSTALL_DIR)  --disable-shared) 
@@ -160,7 +160,7 @@ configure_cddplus: .unpacked_cddplus $(GMP_DIR)/.built_gmp
 EXTRA_DIST += cdd+-077.patch
 .unpacked_cddplus: $(CDDPLUS_TARGZ)
 	for a in $(CDDPLUS_TARGZ); do						\
-	  $(TAR) xfz $$a || exit 1;						\
+	  gunzip < $$a | $(TAR) xf - || exit 1;					\
 	done									\
 	&& (cd $(CDDPLUS_DIR) && $(PATCH) -p1) < $(top_srcdir)/cdd+-077.patch 	\
 	&& touch $@
@@ -183,7 +183,7 @@ build_latte: .built_latte
 configure_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp .built_cddlib $(CDDPLUS_DIR)/.built_cddplus  .built_ntl
 .unpacked_latte: $(LATTE_TARGZ)
 	for a in $(LATTE_TARGZ); do \
-	  $(TAR) xfz $$a || exit 1; \
+	  gunzip < $$a | $(TAR) xf - || exit 1; \
 	done && touch $@
 $(LATTE_DIR)/config.status: .unpacked_latte $(GMP_DIR)/.built_gmp .built_cddlib $(CDDPLUS_DIR)/.built_cddplus $(BUILT_LIDIA) .built_ntl
 	( cd $(LATTE_DIR) && ./configure --with-default=$(INSTALL_DIR) --prefix=$(INSTALL_DIR) ) 
