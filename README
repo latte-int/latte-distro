@@ -11,9 +11,49 @@ To build:
 
 This release of LattE corretto has successfully built on:
 
-  * Solaris/SPARC in 32-bit mode with GCC 3.3.2
-  * Solaris/SPARC in 32-bit mode and 64-bit mode with GCC 4.1.1
+  * Solaris 9 on SPARC in 32-bit mode with GCC 3.3.2
+
+    To build on Solaris, make sure you have a recent version of the
+    GNU "patch" program installed and accessible in your PATH.
+
+  * Solaris 9 on SPARC in 32-bit mode and 64-bit mode with GCC 4.1.1
+
+    By default, 32-bit binaries are created on Solaris.
+    To compile in 64-bit mode on Solaris, use: 
+
+    ./configure CC="gcc -m64 -mptr64" CXX="g++ -m64 -mptr64"
+
   * Debian GNU/Linux on x86 with GCC 3.3.2
+
+  * Fedora Core 3 Linux on x86_64 (AMD Opteron) with GCC 3.4.2
+
+  * Fedora Core 2 Linux on x86 with GCC 3.3.3 20040412 (Red Hat Linux 3.3.3-7)
+
+  * Debian GNU/Linux 3.0 on Alpha with GCC 3.0.4
+
+It fails to build on:
+
+  * Non-GCC compilers, like all Forte/Workshop/Sun Studio compilers on
+    Solaris).
+
+    The reason is that the Forte/Workshop/Sun Studio compilers do not
+    like the C++ part of GMP.  Use GCC instead.
+
+  * Solaris 9 on SPARC in 64-bit mode with GCC 3.3.2
+
+    Use 32-bit mode or a newer GCC version; for instance GCC 4.1.1.
+
+  * Fedora Core 3 Linux on x86_64 (AMD Opteron) with GCC 4.0.0
+    20041019 (Red Hat 4.0.0-0.8).
+
+    Compiling NTL causes an internal compiler error.  Use a different
+    GCC version instead.
+
+  * Debian GNU/Linux 3.0 on Alpha with GCC 2.95.4
+
+    This compiler cannot build CDD+.  Use a newer GCC version.
+
+
 
 Some of the C++ libraries are very picky about the version of the C++
 compiler.  Older ones or newer ones might not work.  To ensure a
@@ -29,9 +69,14 @@ you can turn off using LiDIA:
    make
 
 If you have a multiprocessor machine, be sure to use it to shorten the
-compile time by parallelizing the build:  For instance,
+compile time by parallelizing the build:  For instance, on a
+4-processor machine, use
 
    make -j4
+
+(Because of parallelization bugs in some of the Makefiles, the
+parallelized build might get stuck; in this case, repeat the "make
+-j4" until the build is finished.)
 
 
 When the build process is finished, you will find all binaries in the
