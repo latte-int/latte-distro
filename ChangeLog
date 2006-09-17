@@ -2,10 +2,16 @@
 	distribution.   Changes to LattE macchiato itself are described
 	in the latte subdirectory.
 
-2006-09-16  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+2006-09-17  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
 
 	Version 1.2-mk-0.6
 	
+2006-09-17  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	* Makefile.am: Make it work with non-GNU tar.
+
+2006-09-16  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
 	* configure.ac: Fix configuration for non-SPARC CPUs.
 
 	* Makefile.am: Package all required patches.
