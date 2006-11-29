@@ -144,7 +144,7 @@ configure_cddlib: $(CDDLIB_DIR)/config.status $(GMP_DIR)/.built_gmp
 	  gunzip < $$a | $(TAR) xf - || exit 1; \
 	done && touch $@
 $(CDDLIB_DIR)/config.status: .unpacked_cddlib $(GMP_DIR)/.built_gmp
-	( cd $(CDDLIB_DIR) && ./configure CXX="$(CC)" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" --prefix=$(INSTALL_DIR)  --disable-shared) 
+	( cd $(CDDLIB_DIR) && ./configure CXX="$(CXX)" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" --prefix=$(INSTALL_DIR)  --disable-shared) 
 .built_cddlib: $(CDDLIB_DIR)/config.status $(GMP_DIR)/.built_gmp
 	( cd $(CDDLIB_DIR) && $(MAKE) LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" && $(MAKE) install ) && touch $@
 clean_cddlib: 
