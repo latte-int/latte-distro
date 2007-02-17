@@ -29,6 +29,12 @@ AC_ARG_ENABLE(lidia, AS_HELP_STRING([--disable-lidia],
 AC_SUBST(ENABLE_LIDIA, ${enable_lidia})
 AM_CONDITIONAL(ENABLE_LIDIA, test x${enable_lidia} = xyes)
 
+AC_ARG_ENABLE(4ti2, AS_HELP_STRING([--disable-4ti2],
+				[Do not use the non-free library 4ti2.]), , 
+		[enable_4ti2=yes])
+AC_SUBST(ENABLE_4TI2, ${enable_4ti2})
+AM_CONDITIONAL(ENABLE_4TI2, test x${enable_4ti2} = xyes)
+
 # For Solaris/SPARC, we need to request ABI=32 for GMP builds
 # because it will build a 64-bit library instead.
 case ${target_cpu} in

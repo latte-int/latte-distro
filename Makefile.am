@@ -8,6 +8,9 @@ PACKAGES=gmp cddplus cddlib ntl latte
 if ENABLE_LIDIA
 PACKAGES+=lidia
 endif
+if ENABLE_4TI2
+PACKAGES+=glpk
+endif
 
 GMP_VERSION=4.2.1
 GMP_TARGZ=$(top_srcdir)/gmp-$(GMP_VERSION).tar.gz
@@ -32,6 +35,11 @@ LIDIA_DIR=lidia-$(LIDIA_VERSION)
 LATTE_VERSION=$(PACKAGE_VERSION)
 LATTE_TARGZ=$(top_srcdir)/latte-$(LATTE_VERSION).tar.gz
 LATTE_DIR=latte-$(LATTE_VERSION)
+
+# GLPK is a prerequisite of 4ti2
+GLPK_VERSION=4.13
+GLPK_TARGZ=$(top_srcdir)/glpk-$(GLPK_VERSION).tar.gz
+GLPK_DIR=glpk-$(GLPK_VERSION)
 
 INSTALL_DIR=$(CURDIR)/dest
 
@@ -170,6 +178,21 @@ clean_cddplus:
 	-( rm -f $(CDDPLUS_DIR)/.built_cddplus && cd $(CDDPLUS_DIR) && $(MAKE) clean )
 distclean_cddplus: 
 	-( rm -f $(CDDPLUS_DIR)/.built_cddplus && cd $(CDDPLUS_DIR) && $(MAKE) clean )
+
+# GLPK.
+build_glpk: $(GLPK_DIR)/.built_glpk
+configure_glpk: $(GLPK_DIR)/config.status
+$(GLPK_DIR)/.unpacked_glpk: $(GLPK_TARGZ)
+	gunzip < $(GLPK_TARGZ) | $(TAR) xf - 					\
+	&& touch $@
+$(GLPK_DIR)/config.status: $(GLPK_DIR)/.unpacked_glpk
+	( cd $(GLPK_DIR) && CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ./configure --prefix=$(INSTALL_DIR) --disable-shared $(GLPK_CONFIGURE_OPTIONS) )
+$(GLPK_DIR)/.built_glpk: $(GLPK_DIR)/config.status
+	( cd $(GLPK_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
+clean_glpk: 
+	-( rm -f $(GLPK_DIR)/.built_glpk && cd $(GLPK_DIR) && $(MAKE) clean )
+distclean_glpk: 
+	-( rm -f $(GLPK_DIR)/.built_glpk && cd $(GLPK_DIR) && $(MAKE) distclean )
 
 # LattE.
 
