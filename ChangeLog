@@ -2,6 +2,16 @@
 	distribution.   Changes to LattE macchiato itself are described
 	in the latte subdirectory.
 
+2007-02-17  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	* Makefile.am, configure.ac: Build and install GLPK, a 4ti2
+	prerequisite
+
+2006-11-29  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	* Makefile.am: Build cddlib with the C++ compiler rather than the
+	C compiler.
+
 2006-10-09  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
 
 	Version 1.2-mk-0.7.1
