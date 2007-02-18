@@ -9,7 +9,7 @@ if ENABLE_LIDIA
 PACKAGES+=lidia
 endif
 if ENABLE_4TI2
-PACKAGES+=glpk
+PACKAGES+=glpk 4ti2
 endif
 
 GMP_VERSION=4.2.1
@@ -40,6 +40,11 @@ LATTE_DIR=latte-$(LATTE_VERSION)
 GLPK_VERSION=4.13
 GLPK_TARGZ=$(top_srcdir)/glpk-$(GLPK_VERSION).tar.gz
 GLPK_DIR=glpk-$(GLPK_VERSION)
+
+FORTYTWO_VERSION=1.3.1+autoconf-0.1
+FORTYTWO_TARGZ=$(top_srcdir)/4ti2-$(FORTYTWO_VERSION).tar.gz
+FORTYTWO_DIR=4ti2-$(FORTYTWO_VERSION)
+
 
 INSTALL_DIR=$(CURDIR)/dest
 
@@ -77,7 +82,7 @@ distclean-local: $(PACKAGES:%=distclean_%)
 	$(PACKAGES:%=configure_%)
 
 EXTRA_DIST=$(GMP_TARGZ) $(CDDPLUS_TARGZ) $(CDDLIB_TARGZ) $(NTL_TARGZ)  \
-	$(LIDIA_TARGZ) $(LATTE_TARGZ)
+	$(LIDIA_TARGZ) $(LATTE_TARGZ) $(GLPK_TARGZ) $(FORTYTWO_TARGZ)
 
 # GMP.  
 #
@@ -194,6 +199,21 @@ clean_glpk:
 distclean_glpk: 
 	-( rm -f $(GLPK_DIR)/.built_glpk && cd $(GLPK_DIR) && $(MAKE) distclean )
 
+# 4ti2.
+build_4ti2: $(FORTYTWO_DIR)/.built_4ti2
+configure_4ti2: $(FORTYTWO_DIR)/config.status
+$(FORTYTWO_DIR)/.unpacked_4ti2: $(FORTYTWO_TARGZ)
+	gunzip < $(FORTYTWO_TARGZ) | $(TAR) xf - 					\
+	&& touch $@
+$(FORTYTWO_DIR)/config.status: $(FORTYTWO_DIR)/.unpacked_4ti2
+	( cd $(FORTYTWO_DIR) && CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ./configure --prefix=$(INSTALL_DIR) --disable-shared $(FORTYTWO_CONFIGURE_OPTIONS) )
+$(FORTYTWO_DIR)/.built_4ti2: $(FORTYTWO_DIR)/config.status
+	( cd $(FORTYTWO_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
+clean_4ti2: 
+	-( rm -f $(FORTYTWO_DIR)/.built_4ti2 && cd $(FORTYTWO_DIR) && $(MAKE) clean )
+distclean_4ti2: 
+	-( rm -f $(FORTYTWO_DIR)/.built_4ti2 && cd $(FORTYTWO_DIR) && $(MAKE) distclean )
+
 # LattE.
 
 if ENABLE_LIDIA
@@ -202,15 +222,21 @@ else
 BUILT_LIDIA=
 endif
 
+if ENABLE_4TI2
+BUILT_4TI2=$(FORTYTWO_DIR)/.built_4ti2
+else
+BUILT_4TI2=
+endif
+
 build_latte: .built_latte
 configure_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp .built_cddlib $(CDDPLUS_DIR)/.built_cddplus  .built_ntl
 .unpacked_latte: $(LATTE_TARGZ)
 	for a in $(LATTE_TARGZ); do \
 	  gunzip < $$a | $(TAR) xf - || exit 1; \
 	done && touch $@
-$(LATTE_DIR)/config.status: .unpacked_latte $(GMP_DIR)/.built_gmp .built_cddlib $(CDDPLUS_DIR)/.built_cddplus $(BUILT_LIDIA) .built_ntl
+$(LATTE_DIR)/config.status: .unpacked_latte $(GMP_DIR)/.built_gmp .built_cddlib $(CDDPLUS_DIR)/.built_cddplus $(BUILT_LIDIA) .built_ntl $(BUILT_4TI2)
 	( cd $(LATTE_DIR) && ./configure --with-default=$(INSTALL_DIR) --prefix=$(INSTALL_DIR) ) 
-.built_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp .built_cddlib $(CDDPLUS_DIR)/.built_cddplus $(BUILT_LIDIA) .built_ntl
+.built_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp .built_cddlib $(CDDPLUS_DIR)/.built_cddplus $(BUILT_LIDIA) .built_ntl $(BUILT_4TI2)
 	( cd $(LATTE_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
 clean_latte: 
 	-( rm -f .built_latte && cd $(LATTE_DIR) && $(MAKE) clean )
