@@ -1,6 +1,14 @@
-	This ChangeLog only describes the changes to the "LattE corretto"
+	This ChangeLog only describes the changes to the LattE "for tea, too"
 	distribution.   Changes to LattE macchiato itself are described
 	in the latte subdirectory.
+
+2007-02-18  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	Version 1.2-mk-0.8
+
+2007-02-18  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	* Makefile.am: Build and install 4ti2.
 
 2007-02-17  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
 
