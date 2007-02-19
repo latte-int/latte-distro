@@ -186,11 +186,11 @@ distclean_cddplus:
 
 # GLPK.
 build_glpk: $(GLPK_DIR)/.built_glpk
-configure_glpk: $(GLPK_DIR)/config.status
+configure_glpk: $(GLPK_DIR)/config.status $(GMP_DIR)/.built_gmp
 $(GLPK_DIR)/.unpacked_glpk: $(GLPK_TARGZ)
 	gunzip < $(GLPK_TARGZ) | $(TAR) xf - 					\
 	&& touch $@
-$(GLPK_DIR)/config.status: $(GLPK_DIR)/.unpacked_glpk
+$(GLPK_DIR)/config.status: $(GLPK_DIR)/.unpacked_glpk $(GMP_DIR)/.built_gmp
 	( cd $(GLPK_DIR) && CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ./configure --prefix=$(INSTALL_DIR) --disable-shared $(GLPK_CONFIGURE_OPTIONS) )
 $(GLPK_DIR)/.built_glpk: $(GLPK_DIR)/config.status
 	( cd $(GLPK_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
@@ -201,12 +201,12 @@ distclean_glpk:
 
 # 4ti2.
 build_4ti2: $(FORTYTWO_DIR)/.built_4ti2
-configure_4ti2: $(FORTYTWO_DIR)/config.status
+configure_4ti2: $(FORTYTWO_DIR)/config.status $(GLPK_DIR)/.built_glpk $(GMP_DIR)/.built_gmp
 $(FORTYTWO_DIR)/.unpacked_4ti2: $(FORTYTWO_TARGZ)
 	gunzip < $(FORTYTWO_TARGZ) | $(TAR) xf - 					\
 	&& touch $@
-$(FORTYTWO_DIR)/config.status: $(FORTYTWO_DIR)/.unpacked_4ti2
-	( cd $(FORTYTWO_DIR) && CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ./configure --prefix=$(INSTALL_DIR) --disable-shared $(FORTYTWO_CONFIGURE_OPTIONS) )
+$(FORTYTWO_DIR)/config.status: $(FORTYTWO_DIR)/.unpacked_4ti2 $(GLPK_DIR)/.built_glpk $(GMP_DIR)/.built_gmp
+	( cd $(FORTYTWO_DIR) && CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ./configure --prefix=$(INSTALL_DIR) --with-gmp=$(INSTALL_DIR) --with-glpk=$(INSTALL_DIR) --disable-shared $(FORTYTWO_CONFIGURE_OPTIONS) )
 $(FORTYTWO_DIR)/.built_4ti2: $(FORTYTWO_DIR)/config.status
 	( cd $(FORTYTWO_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
 clean_4ti2: 
