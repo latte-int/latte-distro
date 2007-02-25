@@ -1,7 +1,7 @@
 This is LattE "for tea, too", previously known as "LattE corretto".
 
-It is a source code distribution of a version of LattE with all
-prerequisite libraries.
+It is a source code distribution of a version of LattE macchiato and
+4ti2 with all prerequisite libraries.
 
 Except for the optional library LiDIA, all software
 included in this distribution is free software.
@@ -11,7 +11,27 @@ To build:
    ./configure
    make
 
-This release of LattE corretto has successfully built on:
+When the build process is finished, you will find all binaries in the
+directory 
+
+   dest/bin
+
+I hope this LattE distribution works for you.  Compatibility notes can
+be found below.  Please report any failures, so we can improve the
+distribution and also LattE itself.
+
+Enjoy!
+
+-- Matthias Koeppe <mkoeppe@mail.math.uni-magdeburg.de>
+
+
+
+
+
+
+				*  *  *
+
+This release of LattE "for tea, too" has successfully built on:
 
   * Solaris 9 on SPARC in 32-bit mode with GCC 3.3.2
 
@@ -56,6 +76,7 @@ It fails to build on:
     This compiler cannot build CDD+.  Use a newer GCC version.
 
 
+				*  *  *
 
 Some of the C++ libraries are very picky about the version of the C++
 compiler.  Older ones or newer ones might not work.  To ensure a
@@ -86,14 +107,3 @@ parallelized build might get stuck; in this case, repeat the "make
 -j4" until the build is finished.)
 
 
-When the build process is finished, you will find all binaries in the
-directory dest/bin.  The binaries might depend on shared libraries
-installed in dest/lib, so add this directory to your LD_LIBRARY_PATH
-(and dest/bin to your PATH).
-
-				* * *
-
-I hope this LattE distribution works for you.  Please report any
-failures, so we can improve the distribution and also LattE itself.
-
--- Matthias Koeppe <mkoeppe@mail.math.uni-magdeburg.de>
