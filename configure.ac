@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(latte-for-tea-too, 1.2-mk-0.8)
+AC_INIT(latte-for-tea-too, 1.2-mk-0.8.1)
 AM_INIT_AUTOMAKE(foreign)
 AM_MAINTAINER_MODE
 AC_CONFIG_FILES([Makefile])
