@@ -2,6 +2,19 @@
 	distribution.   Changes to LattE macchiato itself are described
 	in the latte subdirectory.
 
+2007-06-28  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	Version 1.2-mk-0.8.1
+
+2007-06-28  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	* Fix a build problem of NTL on Solaris/SPARC using GCC 4.2.0.
+	Reported by P. J. Charles.
+
+2007-03-03  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
+
+	* Makefile.am: Quoting fixes.
+
 2007-02-18  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
 
 	Version 1.2-mk-0.8
