@@ -32,7 +32,8 @@ LIDIA_VERSION=2.2.0
 LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-FF-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-LA-$(LIDIA_VERSION).tar.gz
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
-LATTE_VERSION=$(PACKAGE_VERSION)
+#LATTE_VERSION=$(PACKAGE_VERSION)
+LATTE_VERSION=1.2-mk-0.8
 LATTE_TARGZ=$(top_srcdir)/latte-$(LATTE_VERSION).tar.gz
 LATTE_DIR=latte-$(LATTE_VERSION)
 
@@ -111,7 +112,10 @@ NTL_CONFIG_FILE=$(NTL_DIR)/src/makefile
 build_ntl: .built_ntl
 configure_ntl: $(NTL_CONFIG_FILE)
 .unpacked_ntl: $(NTL_TARGZ)
-	gunzip < $(NTL_TARGZ) | $(TAR) xf - && touch $@
+	gunzip < $(NTL_TARGZ) | $(TAR) xf - 					\
+	&& (cd $(NTL_DIR) && patch -t -p1 ) < $(top_srcdir)/ntl-5.4-patch	\
+	&& touch $@ 
+EXTRA_DIST += ntl-5.4-patch
 $(NTL_CONFIG_FILE): .unpacked_ntl $(GMP_DIR)/.built_gmp
 	( cd $(NTL_DIR)/src && ./configure CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" PREFIX="$(INSTALL_DIR)" GMP_PREFIX="$(INSTALL_DIR)" NTL_GMP_LIP=on ) 
 .built_ntl: $(NTL_CONFIG_FILE) $(GMP_DIR)/.built_gmp

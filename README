@@ -38,7 +38,7 @@ This release of LattE "for tea, too" has successfully built on:
     To build on Solaris, make sure you have a recent version of the
     GNU "patch" program installed and accessible in your PATH.
 
-  * Solaris 9 on SPARC in 32-bit mode and 64-bit mode with GCC 4.1.1
+  * Solaris 9 on SPARC in 32-bit mode and 64-bit mode with GCC 4.1.1 and 4.2.0
 
     By default, 32-bit binaries are created on Solaris.
     To compile in 64-bit mode on Solaris, use: 
