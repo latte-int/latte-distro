@@ -12,23 +12,23 @@ if ENABLE_4TI2
 PACKAGES+=glpk 4ti2
 endif
 
-GMP_VERSION=4.2.1
+GMP_VERSION=4.2.4
 GMP_TARGZ=$(top_srcdir)/gmp-$(GMP_VERSION).tar.gz
 GMP_DIR=gmp-$(GMP_VERSION)
 
-CDDPLUS_VERSION=077
+CDDPLUS_VERSION=077a
 CDDPLUS_TARGZ=$(top_srcdir)/cdd+-$(CDDPLUS_VERSION).tar.gz
 CDDPLUS_DIR=cdd+-$(CDDPLUS_VERSION)
 
-CDDLIB_VERSION=094b
+CDDLIB_VERSION=094f
 CDDLIB_TARGZ=$(top_srcdir)/cddlib-$(CDDLIB_VERSION).tar.gz
 CDDLIB_DIR=cddlib-$(CDDLIB_VERSION)
 
-NTL_VERSION=5.4
+NTL_VERSION=5.4.2
 NTL_TARGZ=$(top_srcdir)/ntl-$(NTL_VERSION).tar.gz
 NTL_DIR=ntl-$(NTL_VERSION)
 
-LIDIA_VERSION=2.2.0
+LIDIA_VERSION=2.2.1-pre1+svn-1069+lattepatches-0.1
 LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-FF-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-LA-$(LIDIA_VERSION).tar.gz
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
@@ -42,7 +42,7 @@ GLPK_VERSION=4.13
 GLPK_TARGZ=$(top_srcdir)/glpk-$(GLPK_VERSION).tar.gz
 GLPK_DIR=glpk-$(GLPK_VERSION)
 
-FORTYTWO_VERSION=1.3.1+autoconf-0.1
+FORTYTWO_VERSION=1.3.1+autoconf-0.2.4
 FORTYTWO_TARGZ=$(top_srcdir)/4ti2-$(FORTYTWO_VERSION).tar.gz
 FORTYTWO_DIR=4ti2-$(FORTYTWO_VERSION)
 
@@ -92,11 +92,11 @@ EXTRA_DIST=$(GMP_TARGZ) $(CDDPLUS_TARGZ) $(CDDLIB_TARGZ) $(NTL_TARGZ)  \
 
 build_gmp: $(GMP_DIR)/.built_gmp
 configure_gmp: $(GMP_DIR)/config.status
-EXTRA_DIST += gmp-4.2.1-patch
+#EXTRA_DIST += gmp-4.2.1-patch
 $(GMP_DIR)/.unpacked_gmp: $(GMP_TARGZ)
 	gunzip < $(GMP_TARGZ) | $(TAR) xf - 					\
-	&& (cd $(GMP_DIR) && patch -t -p1 ) < $(top_srcdir)/gmp-4.2.1-patch	\
 	&& touch $@
+# (cd $(GMP_DIR) && patch -t -p1 ) < $(top_srcdir)/gmp-4.2.1-patch	
 $(GMP_DIR)/config.status: $(GMP_DIR)/.unpacked_gmp
 	( cd $(GMP_DIR) && unset CFLAGS CXXFLAGS; ./configure --prefix="$(INSTALL_DIR)" --enable-cxx --disable-shared  $(GMP_CONFIGURE_OPTIONS) )
 $(GMP_DIR)/.built_gmp: $(GMP_DIR)/config.status
@@ -113,9 +113,10 @@ build_ntl: .built_ntl
 configure_ntl: $(NTL_CONFIG_FILE)
 .unpacked_ntl: $(NTL_TARGZ)
 	gunzip < $(NTL_TARGZ) | $(TAR) xf - 					\
-	&& (cd $(NTL_DIR) && patch -t -p1 ) < $(top_srcdir)/ntl-5.4-patch	\
 	&& touch $@ 
-EXTRA_DIST += ntl-5.4-patch
+
+## cd $(NTL_DIR) && patch -t -p1 ) < $(top_srcdir)/ntl-5.4-patch	\
+## EXTRA_DIST += ntl-5.4-patch
 $(NTL_CONFIG_FILE): .unpacked_ntl $(GMP_DIR)/.built_gmp
 	( cd $(NTL_DIR)/src && ./configure CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" PREFIX="$(INSTALL_DIR)" GMP_PREFIX="$(INSTALL_DIR)" NTL_GMP_LIP=on ) 
 .built_ntl: $(NTL_CONFIG_FILE) $(GMP_DIR)/.built_gmp
@@ -129,15 +130,11 @@ distclean_ntl:
 
 build_lidia: $(LIDIA_DIR)/.built_lidia
 configure_lidia: $(LIDIA_DIR)/config.status $(GMP_DIR)/.built_gmp
-EXTRA_DIST += lidia-2.2.0.patch lidia-2.2.0-2.patch
+#EXTRA_DIST += lidia-2.2.0.patch lidia-2.2.0-2.patch
 $(LIDIA_DIR)/.unpacked_lidia: $(LIDIA_TARGZ)
 	for a in $(LIDIA_TARGZ); do					\
 	  gunzip < $$a | $(TAR) xf - || exit 1;				\
 	done 								\
-	&& (cd $(LIDIA_DIR)						\
-		&& $(PATCH) -t -p0) < $(top_srcdir)/lidia-2.2.0.patch 	\
-	&& (cd $(LIDIA_DIR)						\
-		&& $(PATCH) -t -p0) < $(top_srcdir)/lidia-2.2.0-2.patch	\
 	&& touch $@
 $(LIDIA_DIR)/config.status: $(LIDIA_DIR)/.unpacked_lidia $(GMP_DIR)/.built_gmp
 	( cd $(LIDIA_DIR) && ./configure --with-arithmetic=gmp --disable-nf --disable-ec --disable-eco --disable-gec --with-extra-includes="$(INSTALL_DIR)"/include --with-extra-libs="$(INSTALL_DIR)"/lib --prefix="$(INSTALL_DIR)"  --disable-shared) 
@@ -174,13 +171,13 @@ distclean_cddlib:
 CDDPLUS_VARIABLES=CC="$(CXX)" LIBDIR="$(INSTALL_DIR)"/lib GMPLIBDIR="$(INSTALL_DIR)"/lib INCLUDEDIR="$(INSTALL_DIR)"/include GMPINCLUDEDIR="$(INSTALL_DIR)"/include OPTFLAGS="$(CXXFLAGS)"
 build_cddplus: $(CDDPLUS_DIR)/.built_cddplus
 configure_cddplus: .unpacked_cddplus $(GMP_DIR)/.built_gmp
-EXTRA_DIST += cdd+-077.patch
+#EXTRA_DIST += cdd+-077.patch
 .unpacked_cddplus: $(CDDPLUS_TARGZ)
 	for a in $(CDDPLUS_TARGZ); do						\
 	  gunzip < $$a | $(TAR) xf - || exit 1;					\
 	done									\
-	&& (cd $(CDDPLUS_DIR) && $(PATCH) -p1) < $(top_srcdir)/cdd+-077.patch 	\
 	&& touch $@
+# (cd $(CDDPLUS_DIR) && $(PATCH) -p1) < $(top_srcdir)/cdd+-077.patch
 $(CDDPLUS_DIR)/.built_cddplus: .unpacked_cddplus $(GMP_DIR)/.built_gmp
 	( cd $(CDDPLUS_DIR) && $(MAKE) $(CDDPLUS_VARIABLES) cddr+ cddf+ && $(mkinstalldirs) "$(INSTALL_DIR)"/bin && $(INSTALL) cddr+ cddf+ "$(INSTALL_DIR)"/bin ) && touch $@
 clean_cddplus: 
