@@ -115,7 +115,9 @@ if test "$ac_test_CFLAGS" != "set"; then
 	CFLAGS="$CFLAGS -fstrict-aliasing")
 
      # note that we enable "unsafe" fp optimization with other compilers, too
-     AX_CHECK_COMPILER_FLAGS(-ffast-math, CFLAGS="$CFLAGS -ffast-math")
+     ## Disabled, as this causes infinite loops in NTL's autoconfiguration.
+     ## As we don't use floating point arithematic significantly, so no performance impact.  --mkoeppe
+     ##AX_CHECK_COMPILER_FLAGS(-ffast-math, CFLAGS="$CFLAGS -ffast-math")
 
      AX_GCC_ARCHFLAG($acx_maxopt_portable)
      ;;
