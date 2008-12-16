@@ -171,13 +171,13 @@ distclean_cddlib:
 CDDPLUS_VARIABLES=CC="$(CXX)" LIBDIR="$(INSTALL_DIR)"/lib GMPLIBDIR="$(INSTALL_DIR)"/lib INCLUDEDIR="$(INSTALL_DIR)"/include GMPINCLUDEDIR="$(INSTALL_DIR)"/include OPTFLAGS="$(CXXFLAGS)"
 build_cddplus: $(CDDPLUS_DIR)/.built_cddplus
 configure_cddplus: .unpacked_cddplus $(GMP_DIR)/.built_gmp
-#EXTRA_DIST += cdd+-077.patch
+EXTRA_DIST += cdd+-077a.patch
 .unpacked_cddplus: $(CDDPLUS_TARGZ)
 	for a in $(CDDPLUS_TARGZ); do						\
 	  gunzip < $$a | $(TAR) xf - || exit 1;					\
 	done									\
+	&& (cd $(CDDPLUS_DIR) && $(PATCH) -p0) < $(top_srcdir)/cdd+-077a.patch	\
 	&& touch $@
-# (cd $(CDDPLUS_DIR) && $(PATCH) -p1) < $(top_srcdir)/cdd+-077.patch
 $(CDDPLUS_DIR)/.built_cddplus: .unpacked_cddplus $(GMP_DIR)/.built_gmp
 	( cd $(CDDPLUS_DIR) && $(MAKE) $(CDDPLUS_VARIABLES) cddr+ cddf+ && $(mkinstalldirs) "$(INSTALL_DIR)"/bin && $(INSTALL) cddr+ cddf+ "$(INSTALL_DIR)"/bin ) && touch $@
 clean_cddplus: 
