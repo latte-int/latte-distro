@@ -141,7 +141,7 @@ $(LIDIA_DIR)/config.status: $(LIDIA_DIR)/.unpacked_lidia $(GMP_DIR)/.built_gmp
 # LiDIA 2.2.0 installs its headers into lidia/ but expects them in LiDIA!?!
 # So we make a symbolic link, just in case.
 $(LIDIA_DIR)/.built_lidia: $(LIDIA_DIR)/config.status $(GMP_DIR)/.built_gmp
-	( cd $(LIDIA_DIR) && $(MAKE) && $(MAKE) install ) && ( cd "$(INSTALL_DIR)"/include && ln -s lidia LiDIA || true ) && touch $@
+	( cd $(LIDIA_DIR) && $(MAKE) && $(MAKE) install ) && ( cd "$(INSTALL_DIR)"/include && if [ ! -r LiDIA ] ; then ln -s lidia LiDIA; fi  || true ) && touch $@
 clean_lidia: 
 	-( rm -f $(LIDIA_DIR)/.built_lidia && cd $(LIDIA_DIR) && $(MAKE) clean )
 distclean_lidia: 
@@ -208,8 +208,12 @@ $(FORTYTWO_DIR)/.unpacked_4ti2: $(FORTYTWO_TARGZ)
 	&& touch $@
 $(FORTYTWO_DIR)/config.status: $(FORTYTWO_DIR)/.unpacked_4ti2 $(GLPK_DIR)/.built_glpk $(GMP_DIR)/.built_gmp
 	( cd $(FORTYTWO_DIR) && CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ./configure --prefix="$(INSTALL_DIR)" --with-gmp="$(INSTALL_DIR)" --with-glpk="$(INSTALL_DIR)" --disable-shared $(FORTYTWO_CONFIGURE_OPTIONS) )
+## We currently have header file clashes between zsolve and groebner on Mac OS,
+## due to semi-case-insensitivity.  Work around for now, by only installing 
+## the header files of groebner -- we only need those... 
+## (This is already fixed for the upcoming 4ti2 releases.)
 $(FORTYTWO_DIR)/.built_4ti2: $(FORTYTWO_DIR)/config.status
-	( cd $(FORTYTWO_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
+	( cd $(FORTYTWO_DIR) && $(MAKE) && $(MAKE) install-exec && (cd src/groebner $(MAKE) install )) && touch $@
 clean_4ti2: 
 	-( rm -f $(FORTYTWO_DIR)/.built_4ti2 && cd $(FORTYTWO_DIR) && $(MAKE) clean )
 distclean_4ti2: 
