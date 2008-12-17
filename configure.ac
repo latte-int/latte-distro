@@ -45,6 +45,18 @@ sparc)
        fi
        ;;
 esac
+
+# Likewise on MacOS X
+case ${target_os} in
+darwin*)
+       AC_CHECK_SIZEOF(void *)
+       if test x${ac_cv_sizeof_void_p} = x4; then
+              gmp_configure_options="ABI=32"
+       fi
+       ;;
+esac
+
+
 AC_SUBST(GMP_CONFIGURE_OPTIONS, ${gmp_configure_options})
 
 AC_OUTPUT
