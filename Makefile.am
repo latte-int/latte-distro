@@ -2,6 +2,8 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
+EXTRA_DIST = autogen.sh
+
 ## Distribution variables.
 
 PACKAGES=gmp cddplus cddlib ntl latte
@@ -82,7 +84,7 @@ distclean-local: $(PACKAGES:%=distclean_%)
 	$(PACKAGES:%=distclean_%) \
 	$(PACKAGES:%=configure_%)
 
-EXTRA_DIST=$(GMP_TARGZ) $(CDDPLUS_TARGZ) $(CDDLIB_TARGZ) $(NTL_TARGZ)  \
+EXTRA_DIST+=$(GMP_TARGZ) $(CDDPLUS_TARGZ) $(CDDLIB_TARGZ) $(NTL_TARGZ)  \
 	$(LIDIA_TARGZ) $(LATTE_TARGZ) $(GLPK_TARGZ) $(FORTYTWO_TARGZ)
 
 # GMP.  
