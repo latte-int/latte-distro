@@ -1,7 +1,5 @@
-This is LattE "for tea, too", previously known as "LattE corretto".
-
-It is a source code distribution of a version of LattE macchiato and
-4ti2 with all prerequisite libraries.
+This is LattE "for tea, too", a source code distribution of a version
+of LattE macchiato and 4ti2 with all prerequisite libraries.
 
 Except for the optional library LiDIA, all software
 included in this distribution is free software.
@@ -22,7 +20,7 @@ distribution and also LattE itself.
 
 Enjoy!
 
--- Matthias Koeppe <mkoeppe@mail.math.uni-magdeburg.de>
+-- Matthias Koeppe <mkoeppe@math.ucdavis.edu>
 
 
 
