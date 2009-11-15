@@ -215,7 +215,7 @@ $(FORTYTWO_DIR)/config.status: $(FORTYTWO_DIR)/.unpacked_4ti2 $(GLPK_DIR)/.built
 ## the header files of groebner -- we only need those... 
 ## (This is already fixed for the upcoming 4ti2 releases.)
 $(FORTYTWO_DIR)/.built_4ti2: $(FORTYTWO_DIR)/config.status
-	( cd $(FORTYTWO_DIR) && $(MAKE) && $(MAKE) install-exec && (cd src/groebner && $(MAKE) install )) && touch $@
+	( cd $(FORTYTWO_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
 clean_4ti2: 
 	-( rm -f $(FORTYTWO_DIR)/.built_4ti2 && cd $(FORTYTWO_DIR) && $(MAKE) clean )
 distclean_4ti2: 
