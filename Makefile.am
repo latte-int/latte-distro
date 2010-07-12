@@ -26,7 +26,7 @@ CDDLIB_VERSION=094f
 CDDLIB_TARGZ=$(top_srcdir)/cddlib-$(CDDLIB_VERSION).tar.gz
 CDDLIB_DIR=cddlib-$(CDDLIB_VERSION)
 
-NTL_VERSION=5.4.2
+NTL_VERSION=5.5.2
 NTL_TARGZ=$(top_srcdir)/ntl-$(NTL_VERSION).tar.gz
 NTL_DIR=ntl-$(NTL_VERSION)
 
@@ -34,8 +34,8 @@ LIDIA_VERSION=2.2.1-pre1+svn-1069+lattepatches-0.1
 LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-FF-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-LA-$(LIDIA_VERSION).tar.gz
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
-LATTE_VERSION=$(PACKAGE_VERSION)
-#LATTE_VERSION=1.2-mk-0.8
+#LATTE_VERSION=$(PACKAGE_VERSION)
+LATTE_VERSION=1.4-prerelease-2010-07-09
 LATTE_TARGZ=$(top_srcdir)/latte-mk-$(LATTE_VERSION).tar.gz
 LATTE_DIR=latte-mk-$(LATTE_VERSION)
 
@@ -181,7 +181,7 @@ EXTRA_DIST += cdd+-077a.patch
 	&& (cd $(CDDPLUS_DIR) && $(PATCH) -p0) < $(top_srcdir)/cdd+-077a.patch	\
 	&& touch $@
 $(CDDPLUS_DIR)/.built_cddplus: .unpacked_cddplus $(GMP_DIR)/.built_gmp
-	( cd $(CDDPLUS_DIR) && $(MAKE) $(CDDPLUS_VARIABLES) cddr+ cddf+ && $(mkinstalldirs) "$(INSTALL_DIR)"/bin && $(INSTALL) cddr+ cddf+ "$(INSTALL_DIR)"/bin ) && touch $@
+	( cd $(CDDPLUS_DIR) && $(MAKE) $(CDDPLUS_VARIABLES) cddr+ cddf+ ) && $(mkinstalldirs) "$(INSTALL_DIR)"/bin && $(INSTALL) $(CDDPLUS_DIR)/cddr+ $(CDDPLUS_DIR)/cddf+ "$(INSTALL_DIR)"/bin && touch $@
 clean_cddplus: 
 	-( rm -f $(CDDPLUS_DIR)/.built_cddplus && cd $(CDDPLUS_DIR) && $(MAKE) clean )
 distclean_cddplus: 
