@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(latte-for-tea-too, 1.4-prerelease-2009-11-14)
+AC_INIT(latte-for-tea-too, 1.4-prerelease-2010-07-09)
 AC_CONFIG_AUX_DIR([.])
 AC_CANONICAL_TARGET
 
