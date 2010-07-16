@@ -34,8 +34,8 @@ LIDIA_VERSION=2.2.1-pre1+svn-1069+lattepatches-0.1
 LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-FF-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-LA-$(LIDIA_VERSION).tar.gz
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
-#LATTE_VERSION=$(PACKAGE_VERSION)
-LATTE_VERSION=1.4-prerelease-2010-07-09
+LATTE_VERSION=$(PACKAGE_VERSION)
+#LATTE_VERSION=1.4-prerelease-2010-07-09
 LATTE_TARGZ=$(top_srcdir)/latte-mk-$(LATTE_VERSION).tar.gz
 LATTE_DIR=latte-mk-$(LATTE_VERSION)
 
