@@ -6,7 +6,8 @@ EXTRA_DIST = autogen.sh
 
 ## Distribution variables.
 
-PACKAGES=gmp cddplus cddlib ntl latte
+PACKAGES=gmp cddlib ntl latte
+##PACKAGES+=cddplus  # No longer needed
 if ENABLE_LIDIA
 PACKAGES+=lidia
 endif
@@ -18,9 +19,9 @@ GMP_VERSION=4.2.4
 GMP_TARGZ=$(top_srcdir)/gmp-$(GMP_VERSION).tar.gz
 GMP_DIR=gmp-$(GMP_VERSION)
 
-CDDPLUS_VERSION=077a
-CDDPLUS_TARGZ=$(top_srcdir)/cdd+-$(CDDPLUS_VERSION).tar.gz
-CDDPLUS_DIR=cdd+-$(CDDPLUS_VERSION)
+## CDDPLUS_VERSION=077a
+## CDDPLUS_TARGZ=$(top_srcdir)/cdd+-$(CDDPLUS_VERSION).tar.gz
+## CDDPLUS_DIR=cdd+-$(CDDPLUS_VERSION)
 
 CDDLIB_VERSION=094f
 CDDLIB_TARGZ=$(top_srcdir)/cddlib-$(CDDLIB_VERSION).tar.gz
@@ -30,14 +31,18 @@ NTL_VERSION=5.5.2
 NTL_TARGZ=$(top_srcdir)/ntl-$(NTL_VERSION).tar.gz
 NTL_DIR=ntl-$(NTL_VERSION)
 
-LIDIA_VERSION=2.2.1-pre1+svn-1069+lattepatches-0.1
+LIDIA_VERSION=2.3.0
 LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-FF-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-LA-$(LIDIA_VERSION).tar.gz
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
 LATTE_VERSION=$(PACKAGE_VERSION)
-#LATTE_VERSION=1.4-prerelease-2010-07-09
 LATTE_TARGZ=$(top_srcdir)/latte-mk-$(LATTE_VERSION).tar.gz
+if ENABLE_LATTE_FROM_SVN
+LATTE_DIR=latte-svn
+LATTE_SVN_URL=https://polyhedron.math.ucdavis.edu/usvn/svn/latte/branches/version_1_4_branch
+else
 LATTE_DIR=latte-mk-$(LATTE_VERSION)
+endif
 
 # GLPK is a prerequisite of 4ti2
 GLPK_VERSION=4.13
@@ -78,14 +83,18 @@ distclean-local: $(PACKAGES:%=distclean_%)
 	rm -f .configured_* .built_*
 	rm -rf dest
 	rm -rf */autom4te.cache
+# Disable distcleancheck -- we leave the package build directories around.
+distcleancheck:
+	@:
 
 .PHONY: $(PACKAGES:%=build_%) \
 	$(PACKAGES:%=clean_%) \
 	$(PACKAGES:%=distclean_%) \
 	$(PACKAGES:%=configure_%)
 
-EXTRA_DIST+=$(GMP_TARGZ) $(CDDPLUS_TARGZ) $(CDDLIB_TARGZ) $(NTL_TARGZ)  \
+EXTRA_DIST+=$(GMP_TARGZ) $(CDDLIB_TARGZ) $(NTL_TARGZ)  \
 	$(LIDIA_TARGZ) $(LATTE_TARGZ) $(GLPK_TARGZ) $(FORTYTWO_TARGZ)
+#EXTRA_DIST+=$(CDDPLUS_TARGZ)
 
 # GMP.  
 #
@@ -170,22 +179,22 @@ distclean_cddlib:
 
 # cdd+.
 
-CDDPLUS_VARIABLES=CC="$(CXX)" LIBDIR="$(INSTALL_DIR)"/lib GMPLIBDIR="$(INSTALL_DIR)"/lib INCLUDEDIR="$(INSTALL_DIR)"/include GMPINCLUDEDIR="$(INSTALL_DIR)"/include OPTFLAGS="$(CXXFLAGS)"
-build_cddplus: $(CDDPLUS_DIR)/.built_cddplus
-configure_cddplus: .unpacked_cddplus $(GMP_DIR)/.built_gmp
-EXTRA_DIST += cdd+-077a.patch
-.unpacked_cddplus: $(CDDPLUS_TARGZ)
-	for a in $(CDDPLUS_TARGZ); do						\
-	  gunzip < $$a | $(TAR) xf - || exit 1;					\
-	done									\
-	&& (cd $(CDDPLUS_DIR) && $(PATCH) -p0) < $(top_srcdir)/cdd+-077a.patch	\
-	&& touch $@
-$(CDDPLUS_DIR)/.built_cddplus: .unpacked_cddplus $(GMP_DIR)/.built_gmp
-	( cd $(CDDPLUS_DIR) && $(MAKE) $(CDDPLUS_VARIABLES) cddr+ cddf+ ) && $(mkinstalldirs) "$(INSTALL_DIR)"/bin && $(INSTALL) $(CDDPLUS_DIR)/cddr+ $(CDDPLUS_DIR)/cddf+ "$(INSTALL_DIR)"/bin && touch $@
-clean_cddplus: 
-	-( rm -f $(CDDPLUS_DIR)/.built_cddplus && cd $(CDDPLUS_DIR) && $(MAKE) clean )
-distclean_cddplus: 
-	-( rm -f $(CDDPLUS_DIR)/.built_cddplus && cd $(CDDPLUS_DIR) && $(MAKE) clean )
+## CDDPLUS_VARIABLES=CC="$(CXX)" LIBDIR="$(INSTALL_DIR)"/lib GMPLIBDIR="$(INSTALL_DIR)"/lib INCLUDEDIR="$(INSTALL_DIR)"/include GMPINCLUDEDIR="$(INSTALL_DIR)"/include OPTFLAGS="$(CXXFLAGS)"
+## build_cddplus: $(CDDPLUS_DIR)/.built_cddplus
+## configure_cddplus: .unpacked_cddplus $(GMP_DIR)/.built_gmp
+## EXTRA_DIST += cdd+-077a.patch
+## .unpacked_cddplus: $(CDDPLUS_TARGZ)
+## 	for a in $(CDDPLUS_TARGZ); do						\
+## 	  gunzip < $$a | $(TAR) xf - || exit 1;					\
+## 	done									\
+## 	&& (cd $(CDDPLUS_DIR) && $(PATCH) -p0) < $(top_srcdir)/cdd+-077a.patch	\
+## 	&& touch $@
+## $(CDDPLUS_DIR)/.built_cddplus: .unpacked_cddplus $(GMP_DIR)/.built_gmp
+## 	( cd $(CDDPLUS_DIR) && $(MAKE) $(CDDPLUS_VARIABLES) cddr+ cddf+ ) && $(mkinstalldirs) "$(INSTALL_DIR)"/bin && $(INSTALL) $(CDDPLUS_DIR)/cddr+ $(CDDPLUS_DIR)/cddf+ "$(INSTALL_DIR)"/bin && touch $@
+## clean_cddplus: 
+## 	-( rm -f $(CDDPLUS_DIR)/.built_cddplus && cd $(CDDPLUS_DIR) && $(MAKE) clean )
+## distclean_cddplus: 
+## 	-( rm -f $(CDDPLUS_DIR)/.built_cddplus && cd $(CDDPLUS_DIR) && $(MAKE) clean )
 
 # GLPK.
 build_glpk: $(GLPK_DIR)/.built_glpk
@@ -236,19 +245,26 @@ BUILT_4TI2=
 endif
 
 build_latte: .built_latte
-configure_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp .built_cddlib $(CDDPLUS_DIR)/.built_cddplus  .built_ntl
-.unpacked_latte: $(LATTE_TARGZ)
+configure_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp .built_cddlib  .built_ntl
+##$(CDDPLUS_DIR)/.built_cddplus  # no longer needed
+if ENABLE_LATTE_FROM_SVN
+$(LATTE_DIR)/.unpacked_latte: 
+	svn co $(LATTE_SVN_URL) $(LATTE_DIR)  && (cd $(LATTE_DIR) && ./autogen.sh) && touch $@
+else
+$(LATTE_DIR)/.unpacked_latte: $(LATTE_TARGZ)
 	for a in $(LATTE_TARGZ); do \
 	  gunzip < $$a | $(TAR) xf - || exit 1; \
 	done && touch $@
-$(LATTE_DIR)/config.status: .unpacked_latte $(GMP_DIR)/.built_gmp .built_cddlib $(CDDPLUS_DIR)/.built_cddplus $(BUILT_LIDIA) .built_ntl $(BUILT_4TI2)
+endif
+$(LATTE_DIR)/config.status: $(LATTE_DIR)/.unpacked_latte $(GMP_DIR)/.built_gmp .built_cddlib $(BUILT_LIDIA) .built_ntl $(BUILT_4TI2)
 	( cd $(LATTE_DIR) && ./configure --with-default="$(INSTALL_DIR)" --prefix="$(INSTALL_DIR)" --enable-relocatable ) 
-.built_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp .built_cddlib $(CDDPLUS_DIR)/.built_cddplus $(BUILT_LIDIA) .built_ntl $(BUILT_4TI2)
+##$(CDDPLUS_DIR)/.built_cddplus  # no longer needed
+.built_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp .built_cddlib $(BUILT_LIDIA) .built_ntl $(BUILT_4TI2)
 	( cd $(LATTE_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
+##$(CDDPLUS_DIR)/.built_cddplus 
 clean_latte: 
 	-( rm -f .built_latte && cd $(LATTE_DIR) && $(MAKE) clean )
 distclean_latte: 
 	-( rm -f .built_latte && cd $(LATTE_DIR) && $(MAKE) distclean )
 
 ## Maintainer targets
-
