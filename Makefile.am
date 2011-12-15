@@ -36,12 +36,15 @@ LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
 LATTE_VERSION=$(PACKAGE_VERSION)
-LATTE_TARGZ=$(top_srcdir)/latte-mk-$(LATTE_VERSION).tar.gz
+#LATTE_TARGZ=$(top_srcdir)/latte-mk-$(LATTE_VERSION).tar.gz
+LATTE_TARGZ=$(top_srcdir)/latte-int-1.5.tar.gz
 if ENABLE_LATTE_FROM_SVN
 LATTE_DIR=latte-svn
 LATTE_SVN_URL=https://polyhedron.math.ucdavis.edu/usvn/svn/latte/branches/version_1_4_branch
 else
-LATTE_DIR=latte-mk-$(LATTE_VERSION)
+LATTE_DIR=latte-int-1.5
+#LATTE_DIR=../latte
+
 endif
 
 # GLPK is a prerequisite of 4ti2
