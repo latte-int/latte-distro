@@ -1,11 +1,11 @@
-	This ChangeLog only describes the changes to the LattE "for tea, too"
-	distribution.   Changes to LattE macchiato itself are described
-	in the latte subdirectory.
+	This ChangeLog only describes the changes to the LattE integrale
+	"for tea, too" distribution.  Changes to LattE integrale itself
+	are described in the latte subdirectory.
 
 2008-12-17  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
 	Version 1.2-mk-0.9.3
-	
+
 2008-12-17  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
 	* configure.ac: Bump version number.
@@ -25,7 +25,7 @@
 2008-12-15  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
 	Version 1.2-mk-0.9.2
-	
+
 2008-12-15  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
 	* m4/ax_cxx_maxopt.m4, m4/ax_cc_maxopt.m4: Don't use -ffast-math,
@@ -99,7 +99,7 @@
 2006-09-17  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
 
 	Version 1.2-mk-0.6
-	
+
 2006-09-17  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
 
 	* Makefile.am: Make it work with non-GNU tar.
@@ -137,7 +137,7 @@
 2006-07-08  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
 
 	Version 1.2-mk-0.5.1
-	
+
 2006-07-06  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
 
 	Version 1.2-mk-0.5
