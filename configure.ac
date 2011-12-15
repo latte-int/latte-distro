@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(latte-integrale, 1.5.1)
+AC_INIT(latte-integrale, 1.5.2)
 AC_CONFIG_AUX_DIR([.])
 AC_CANONICAL_TARGET
 
