@@ -1,5 +1,5 @@
-This is LattE "for tea, too", a source code distribution of a version
-of LattE macchiato and 4ti2 with all prerequisite libraries.
+This is LattE integrale "for tea, too", a source code distribution of 
+of LattE integrale and 4ti2 with all prerequisite libraries.
 
 Except for the optional library LiDIA, all software
 included in this distribution is free software.
@@ -14,14 +14,14 @@ directory
 
    dest/bin
 
-I hope this LattE distribution works for you.  Compatibility notes can
-be found below.  Please report any failures, so we can improve the
-distribution and also LattE itself.
+I hope this LattE integrale distribution works for you.  Compatibility
+notes can be found below.  Please report any failures, so we can
+improve the distribution and also LattE integrale itself.
 
 Enjoy!
 
 -- Matthias Koeppe <mkoeppe@math.ucdavis.edu>
-
+   for the LattE team
 
 
 
