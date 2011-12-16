@@ -2,6 +2,12 @@
 	"for tea, too" distribution.  Changes to LattE integrale itself
 	are described in the latte subdirectory.
 
+2011-12-15 Mathias Koeppe <mkoeppe@math.ucdavis.edu>, Brandon Dutra <bedutra@ucdavis.edu>
+
+	* Updated LiDIA: Fixed the "precondition_error" error.
+
+	* Makefile: 4ti2's configure script is no longer passed -std=c++0x nor -R
+
 2008-12-17  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
 	Version 1.2-mk-0.9.3
