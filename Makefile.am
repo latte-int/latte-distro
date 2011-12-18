@@ -288,3 +288,7 @@ distuninstallcheck:
 
 
 ## Maintainer targets
+
+update-changelog: 
+	(cd $(srcdir) && svn2cl --output=ChangeLog.svn2cl --authors=.svn2cl-authors)
+
