@@ -2,11 +2,48 @@
 	"for tea, too" distribution.  Changes to LattE integrale itself
 	are described in the latte subdirectory.
 
-2011-12-15 Mathias Koeppe <mkoeppe@math.ucdavis.edu>, Brandon Dutra <bedutra@ucdavis.edu>
+2011-12-15  Brandon Dutra  <bedutra@ucdavis.edu>
 
-	* Updated LiDIA: Fixed the "precondition_error" error.
+	LattE integrale 1.5.3
 
-	* Makefile: 4ti2's configure script is no longer passed -std=c++0x nor -R
+	* Update 4ti2 to 1.5
+
+2011-12-15  Brandon Dutra  <bedutra@ucdavis.edu>
+
+	LattE integrale 1.5.2
+
+	* Update 4ti2 to 1.4, removes 4ti2's portability issue with "-R"
+	* Don't pass -std=c++0x to 4ti2 and latte configure
+
+2011-09-23  Brandon Dutra  <bedutra@ucdavis.edu>
+
+	LattE integrale 1.5.1
+
+	* Fix LiDIA's compile-time "precondition_error"
+
+2011-07-30  Brandon Dutra  <bedutra@ucdavis.edu>
+
+	LattE integrale 1.5
+
+2010-08-21  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	Version 1.4-prerelease-2010-08-21
+
+2010-07-09  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	Version 1.4-prerelease-2010-07-09
+
+2010-07-10  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	Version 1.4-prerelease-2010-07-10
+
+2010-07-16  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	Version 1.4-prerelease-2010-07-16
+
+2010-07-16  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	Version 1.4-prerelease-2010-07-16a
 
 2008-12-17  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
