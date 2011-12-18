@@ -49,11 +49,11 @@ LATTE_DIR=latte-int-1.5
 endif
 
 # GLPK is a prerequisite of 4ti2
-GLPK_VERSION=4.13
+GLPK_VERSION=4.47
 GLPK_TARGZ=$(top_srcdir)/glpk-$(GLPK_VERSION).tar.gz
 GLPK_DIR=glpk-$(GLPK_VERSION)
 
-FORTYTWO_VERSION=1.5
+FORTYTWO_VERSION=1.5.1
 FORTYTWO_TARGZ=$(top_srcdir)/4ti2-$(FORTYTWO_VERSION).tar.gz
 FORTYTWO_DIR=4ti2-$(FORTYTWO_VERSION)
 
@@ -113,7 +113,7 @@ $(GMP_DIR)/.unpacked_gmp: $(GMP_TARGZ)
 	&& touch $@
 # (cd $(GMP_DIR) && patch -t -p1 ) < $(top_srcdir)/gmp-4.2.1-patch	
 $(GMP_DIR)/config.status: $(GMP_DIR)/.unpacked_gmp
-	( cd $(GMP_DIR) && unset CFLAGS CXXFLAGS; ./configure --prefix="$(INSTALL_DIR)" --enable-cxx --disable-shared  $(GMP_CONFIGURE_OPTIONS) )
+	( cd $(GMP_DIR) && unset CFLAGS CXXFLAGS; ./configure --prefix="$(INSTALL_DIR)" --enable-cxx --disable-shared $(LATTE_SUB_CONFIGURE_ARGS_GMP) $(GMP_CONFIGURE_OPTIONS) )
 $(GMP_DIR)/.built_gmp: $(GMP_DIR)/config.status
 	( cd $(GMP_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
 clean_gmp: 
@@ -126,16 +126,23 @@ distclean_gmp:
 NTL_CONFIG_FILE=$(NTL_DIR)/src/makefile
 build_ntl: .built_ntl
 configure_ntl: $(NTL_CONFIG_FILE)
-.unpacked_ntl: $(NTL_TARGZ)
-	gunzip < $(NTL_TARGZ) | $(TAR) xf - 					\
+$(NTL_DIR)/.unpacked_ntl: $(NTL_TARGZ)
+	gunzip < $(NTL_TARGZ) | $(TAR) xf -					      \
 	&& touch $@ 
 
-## cd $(NTL_DIR) && patch -t -p1 ) < $(top_srcdir)/ntl-5.4-patch	\
-## EXTRA_DIST += ntl-5.4-patch
-$(NTL_CONFIG_FILE): .unpacked_ntl $(GMP_DIR)/.built_gmp
-	( cd $(NTL_DIR)/src && ./configure CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" PREFIX="$(INSTALL_DIR)" GMP_PREFIX="$(INSTALL_DIR)" NTL_GMP_LIP=on ) 
+### We don't pass $(LATTE_SUB_CONFIGURE_ARGS) to NTL; it does not understand common autoconf options.
+if LATTE_ENABLE_SHARED
+NTL_SHARED=on
+else
+NTL_SHARED=off
+endif
+$(NTL_CONFIG_FILE): $(NTL_DIR)/.unpacked_ntl $(GMP_DIR)/.built_gmp
+	( cd $(NTL_DIR)/src && ./configure CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" AR="$(AR)" LIBTOOL="$(abs_top_builddir)/libtool" RANLIB="$(RANLIB)" PREFIX="$(INSTALL_DIR)" GMP_PREFIX="$(INSTALL_DIR)" NTL_GMP_LIP=on SHARED=$(NTL_SHARED) )
+
 .built_ntl: $(NTL_CONFIG_FILE) $(GMP_DIR)/.built_gmp
-	( cd $(NTL_DIR)/src && $(MAKE) setup1 && $(MAKE) setup2 && $(MAKE) setup3 && $(MAKE) setup4 && $(MAKE) ntl.a && $(MAKE) install ) && touch $@
+	( cd $(NTL_DIR)/src && $(MAKE) setup1 && $(MAKE) setup2 && $(MAKE) setup3 && $(MAKE) setup4 && $(MAKE) ntl.a && $(MAKE) install ) \
+	&& touch $@
+
 clean_ntl: 
 	-( rm -f .built_ntl && cd $(NTL_DIR)/src && $(MAKE) clean )
 distclean_ntl: 
@@ -152,7 +159,7 @@ $(LIDIA_DIR)/.unpacked_lidia: $(LIDIA_TARGZ)
 	done 								\
 	&& touch $@
 $(LIDIA_DIR)/config.status: $(LIDIA_DIR)/.unpacked_lidia $(GMP_DIR)/.built_gmp
-	( cd $(LIDIA_DIR) && ./configure --with-arithmetic=gmp --disable-nf --disable-ec --disable-eco --disable-gec --with-extra-includes="$(INSTALL_DIR)"/include --with-extra-libs="$(INSTALL_DIR)"/lib --prefix="$(INSTALL_DIR)"  --disable-shared) 
+	( cd $(LIDIA_DIR) && ./configure --with-arithmetic=gmp --disable-nf --disable-ec --disable-eco --disable-gec --with-extra-includes="$(INSTALL_DIR)"/include --with-extra-libs="$(INSTALL_DIR)"/lib --prefix="$(INSTALL_DIR)"  --disable-shared $(LATTE_SUB_CONFIGURE_ARGS)) 
 # LiDIA 2.2.0 installs its headers into lidia/ but expects them in LiDIA!?!
 # So we make a symbolic link, just in case.
 $(LIDIA_DIR)/.built_lidia: $(LIDIA_DIR)/config.status $(GMP_DIR)/.built_gmp
@@ -166,15 +173,18 @@ distclean_lidia:
 #
 # cddlib 094b has a hard-coded location of GMP in /usr/local in its Makefile.am(!)
 # We work around this by passing LDFLAGS to both configure and make.
-build_cddlib: .built_cddlib
+build_cddlib: $(CDDLIB_DIR)/.built_cddlib
 configure_cddlib: $(CDDLIB_DIR)/config.status $(GMP_DIR)/.built_gmp
-.unpacked_cddlib: $(CDDLIB_TARGZ)
-	for a in $(CDDLIB_TARGZ); do \
-	  gunzip < $$a | $(TAR) xf - || exit 1; \
-	done && touch $@
-$(CDDLIB_DIR)/config.status: .unpacked_cddlib $(GMP_DIR)/.built_gmp
-	( cd $(CDDLIB_DIR) && ./configure CXX="$(CXX)" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" --prefix="$(INSTALL_DIR)"  --disable-shared) 
-.built_cddlib: $(CDDLIB_DIR)/config.status $(GMP_DIR)/.built_gmp
+$(CDDLIB_DIR)/.unpacked_cddlib: $(CDDLIB_TARGZ)
+	for a in $(CDDLIB_TARGZ); do						 \
+	  gunzip < $$a | $(TAR) xf - || exit 1;					 \
+	done 									 \
+	&& (cd $(CDDLIB_DIR) && patch -t -p1 ) < $(top_srcdir)/cddlib-shared-library.patch \
+	&& touch $@
+EXTRA_DIST += cddlib-shared-library.patch
+$(CDDLIB_DIR)/config.status: $(CDDLIB_DIR)/.unpacked_cddlib $(GMP_DIR)/.built_gmp
+	( cd $(CDDLIB_DIR) && ./configure CXX="$(CXX)" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" --prefix="$(INSTALL_DIR)"  --disable-shared $(LATTE_SUB_CONFIGURE_ARGS)) 
+$(CDDLIB_DIR)/.built_cddlib: $(CDDLIB_DIR)/config.status $(GMP_DIR)/.built_gmp
 	( cd $(CDDLIB_DIR) && $(MAKE) LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" && $(MAKE) install ) && touch $@
 clean_cddlib: 
 	-( rm -f .built_cddlib && cd $(CDDLIB_DIR) && $(MAKE) clean )
@@ -207,7 +217,7 @@ $(GLPK_DIR)/.unpacked_glpk: $(GLPK_TARGZ)
 	gunzip < $(GLPK_TARGZ) | $(TAR) xf - 					\
 	&& touch $@
 $(GLPK_DIR)/config.status: $(GLPK_DIR)/.unpacked_glpk $(GMP_DIR)/.built_gmp
-	( cd $(GLPK_DIR) && CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ./configure --prefix="$(INSTALL_DIR)" --disable-shared $(GLPK_CONFIGURE_OPTIONS) )
+	( cd $(GLPK_DIR) && CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ./configure --prefix="$(INSTALL_DIR)" --disable-shared $(GLPK_CONFIGURE_OPTIONS) $(LATTE_SUB_CONFIGURE_ARGS))
 $(GLPK_DIR)/.built_glpk: $(GLPK_DIR)/config.status
 	( cd $(GLPK_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
 clean_glpk: 
@@ -222,7 +232,7 @@ $(FORTYTWO_DIR)/.unpacked_4ti2: $(FORTYTWO_TARGZ)
 	gunzip < $(FORTYTWO_TARGZ) | $(TAR) xf - 					\
 	&& touch $@
 $(FORTYTWO_DIR)/config.status: $(FORTYTWO_DIR)/.unpacked_4ti2 $(GLPK_DIR)/.built_glpk $(GMP_DIR)/.built_gmp
-	( cd $(FORTYTWO_DIR) && CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ./configure --prefix="$(INSTALL_DIR)" --with-gmp="$(INSTALL_DIR)" --with-glpk="$(INSTALL_DIR)" --disable-shared $(FORTYTWO_CONFIGURE_OPTIONS) )
+	( cd $(FORTYTWO_DIR) && CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ./configure --prefix="$(INSTALL_DIR)" --with-gmp="$(INSTALL_DIR)" --with-glpk="$(INSTALL_DIR)" --disable-shared $(FORTYTWO_CONFIGURE_OPTIONS) $(LATTE_SUB_CONFIGURE_ARGS))
 ## We currently have header file clashes between zsolve and groebner on Mac OS,
 ## due to semi-case-insensitivity.  Work around for now, by only installing 
 ## the header files of groebner -- we only need those... 
@@ -261,7 +271,7 @@ $(LATTE_DIR)/.unpacked_latte: $(LATTE_TARGZ)
 	done && touch $@
 endif
 $(LATTE_DIR)/config.status: $(LATTE_DIR)/.unpacked_latte $(GMP_DIR)/.built_gmp .built_cddlib $(BUILT_LIDIA) .built_ntl $(BUILT_4TI2)
-	( cd $(LATTE_DIR) && ./configure --with-default="$(INSTALL_DIR)" --prefix="$(INSTALL_DIR)" --enable-relocatable ) 
+	( cd $(LATTE_DIR) && ./configure --with-default="$(INSTALL_DIR)" --prefix="$(INSTALL_DIR)" --enable-relocatable $(LATTE_SUB_CONFIGURE_ARGS)) 
 ##$(CDDPLUS_DIR)/.built_cddplus  # no longer needed
 .built_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp .built_cddlib $(BUILT_LIDIA) .built_ntl $(BUILT_4TI2)
 	( cd $(LATTE_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
