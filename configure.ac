@@ -2,13 +2,17 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(latte-integrale, 1.5.2)
-AC_CONFIG_AUX_DIR([.])
+AC_INIT(latte-integrale, 1.5.3+svn)
+AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_TARGET
 
 AM_INIT_AUTOMAKE(foreign)
 AM_MAINTAINER_MODE
 AC_CONFIG_FILES([Makefile])
+
+LT_INIT
+AC_DISABLE_SHARED
+AM_CONDITIONAL(LATTE_ENABLE_SHARED, test x${enable_shared} = xyes)
 
 AC_PROG_CC
 AC_PROG_CXX
@@ -63,5 +67,77 @@ esac
 
 
 AC_SUBST(GMP_CONFIGURE_OPTIONS, ${gmp_configure_options})
+
+
+### Find user-provided configure args that are suitable for passing
+### them to our sub-configures.
+### (Code adapted from autoconf/status.m4.)
+  latte_sub_configure_args=
+  latte_sub_configure_args_gmp=
+  ac_prev=
+  eval "set x $ac_configure_args"
+  shift
+  for ac_arg
+  do
+    if test -n "$ac_prev"; then
+      ac_prev=
+      continue
+    fi
+    case $ac_arg in
+    -cache-file | --cache-file | --cache-fil | --cache-fi \
+    | --cache-f | --cache- | --cache | --cach | --cac | --ca | --c)
+      ac_prev=cache_file ;;
+    -cache-file=* | --cache-file=* | --cache-fil=* | --cache-fi=* \
+    | --cache-f=* | --cache-=* | --cache=* | --cach=* | --cac=* | --ca=* \
+    | --c=*)
+      ;;
+    --config-cache | -C)
+      ;;
+    -srcdir | --srcdir | --srcdi | --srcd | --src | --sr)
+      ac_prev=srcdir ;;
+    -srcdir=* | --srcdir=* | --srcdi=* | --srcd=* | --src=* | --sr=*)
+      ;;
+    -prefix | --prefix | --prefi | --pref | --pre | --pr | --p)
+      ac_prev=prefix ;;
+    -prefix=* | --prefix=* | --prefi=* | --pref=* | --pre=* | --pr=* | --p=*)
+      ;;
+    --disable-option-checking)
+      ;;
+    *)
+      case $ac_arg in
+      *\'*) ac_arg=`AS_ECHO(["$ac_arg"]) | sed "s/'/'\\\\\\\\''/g"` ;;
+      esac
+      AS_VAR_APPEND([latte_sub_configure_args], [" '$ac_arg'"]) 
+      case $ac_arg in 
+      CFLAGS*) ;;
+      CXXFLAGS*) ;;
+      *) AS_VAR_APPEND([latte_sub_configure_args_gmp], [" '$ac_arg'"]) ;;
+      esac
+      ;;
+    esac
+  done
+
+  dnl # Always prepend --prefix to ensure using the same prefix
+  dnl # in subdir configurations.
+  dnl ac_arg="--prefix=$prefix"
+  dnl case $ac_arg in
+  dnl *\'*) ac_arg=`AS_ECHO(["$ac_arg"]) | sed "s/'/'\\\\\\\\''/g"` ;;
+  dnl esac
+  dnl latte_sub_configure_args="'$ac_arg' $latte_sub_configure_args"
+
+  # Pass --silent
+  if test "$silent" = yes; then
+    latte_sub_configure_args="--silent $latte_sub_configure_args"
+    latte_sub_configure_args_gmp="--silent $latte_sub_configure_args_gmp"
+  fi
+
+  # Always prepend --disable-option-checking to silence warnings, since
+  # different subdirs can have different --enable and --with options.
+  latte_sub_configure_args="--disable-option-checking $latte_sub_configure_args"
+  latte_sub_configure_args_gmp="--disable-option-checking $latte_sub_configure_args_gmp"
+
+
+AC_SUBST(LATTE_SUB_CONFIGURE_ARGS, ${latte_sub_configure_args})
+AC_SUBST(LATTE_SUB_CONFIGURE_ARGS_GMP, ${latte_sub_configure_args_gmp})
 
 AC_OUTPUT
