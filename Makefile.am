@@ -41,7 +41,7 @@ LATTE_VERSION=$(PACKAGE_VERSION)
 LATTE_TARGZ=$(top_srcdir)/latte-int-1.5.tar.gz
 if ENABLE_LATTE_FROM_SVN
 LATTE_DIR=latte-svn
-LATTE_SVN_URL=https://polyhedron.math.ucdavis.edu/usvn/svn/latte/branches/version_1_4_branch
+LATTE_SVN_URL=https://polyhedron.math.ucdavis.edu/usvn/svn/latte/trunk
 else
 LATTE_DIR=latte-int-1.5
 #LATTE_DIR=../latte
@@ -58,7 +58,7 @@ FORTYTWO_TARGZ=$(top_srcdir)/4ti2-$(FORTYTWO_VERSION).tar.gz
 FORTYTWO_DIR=4ti2-$(FORTYTWO_VERSION)
 
 
-INSTALL_DIR=$(CURDIR)/dest
+INSTALL_DIR=$(prefix)
 
 ## Exported variables. 
 
@@ -124,7 +124,7 @@ distclean_gmp:
 # NTL.
 
 NTL_CONFIG_FILE=$(NTL_DIR)/src/makefile
-build_ntl: .built_ntl
+build_ntl: $(NTL_DIR)/.built_ntl
 configure_ntl: $(NTL_CONFIG_FILE)
 $(NTL_DIR)/.unpacked_ntl: $(NTL_TARGZ)
 	gunzip < $(NTL_TARGZ) | $(TAR) xf -					      \
@@ -139,14 +139,14 @@ endif
 $(NTL_CONFIG_FILE): $(NTL_DIR)/.unpacked_ntl $(GMP_DIR)/.built_gmp
 	( cd $(NTL_DIR)/src && ./configure CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" AR="$(AR)" LIBTOOL="$(abs_top_builddir)/libtool" RANLIB="$(RANLIB)" PREFIX="$(INSTALL_DIR)" GMP_PREFIX="$(INSTALL_DIR)" NTL_GMP_LIP=on SHARED=$(NTL_SHARED) )
 
-.built_ntl: $(NTL_CONFIG_FILE) $(GMP_DIR)/.built_gmp
+$(NTL_DIR)/.built_ntl: $(NTL_CONFIG_FILE) $(GMP_DIR)/.built_gmp
 	( cd $(NTL_DIR)/src && $(MAKE) setup1 && $(MAKE) setup2 && $(MAKE) setup3 && $(MAKE) setup4 && $(MAKE) ntl.a && $(MAKE) install ) \
 	&& touch $@
 
 clean_ntl: 
-	-( rm -f .built_ntl && cd $(NTL_DIR)/src && $(MAKE) clean )
+	-( rm -f $(NTL_DIR)/.built_ntl && cd $(NTL_DIR)/src && $(MAKE) clean )
 distclean_ntl: 
-	-( rm -f .built_ntl && cd $(NTL_DIR)/src && $(MAKE) clean; rm -f $(NTL_CONFIG_FILE) )
+	-( rm -f $(NTL_DIR)/.built_ntl && cd $(NTL_DIR)/src && $(MAKE) clean; rm -f $(NTL_CONFIG_FILE) )
 
 # LiDIA.
 
@@ -187,9 +187,9 @@ $(CDDLIB_DIR)/config.status: $(CDDLIB_DIR)/.unpacked_cddlib $(GMP_DIR)/.built_gm
 $(CDDLIB_DIR)/.built_cddlib: $(CDDLIB_DIR)/config.status $(GMP_DIR)/.built_gmp
 	( cd $(CDDLIB_DIR) && $(MAKE) LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" && $(MAKE) install ) && touch $@
 clean_cddlib: 
-	-( rm -f .built_cddlib && cd $(CDDLIB_DIR) && $(MAKE) clean )
+	-( rm -f $(CDDLIB_DIR)/.built_cddlib && cd $(CDDLIB_DIR) && $(MAKE) clean )
 distclean_cddlib: 
-	-( rm -f .built_cddlib && cd $(CDDLIB_DIR) && $(MAKE) distclean )
+	-( rm -f $(CDDLIB_DIR)/.built_cddlib && cd $(CDDLIB_DIR) && $(MAKE) distclean )
 
 # cdd+.
 
@@ -259,7 +259,7 @@ BUILT_4TI2=
 endif
 
 build_latte: .built_latte
-configure_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp .built_cddlib  .built_ntl
+configure_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp $(CDDLIB_DIR)/.built_cddlib  $(NTL_DIR)/.built_ntl
 ##$(CDDPLUS_DIR)/.built_cddplus  # no longer needed
 if ENABLE_LATTE_FROM_SVN
 $(LATTE_DIR)/.unpacked_latte: 
@@ -270,15 +270,21 @@ $(LATTE_DIR)/.unpacked_latte: $(LATTE_TARGZ)
 	  gunzip < $$a | $(TAR) xf - || exit 1; \
 	done && touch $@
 endif
-$(LATTE_DIR)/config.status: $(LATTE_DIR)/.unpacked_latte $(GMP_DIR)/.built_gmp .built_cddlib $(BUILT_LIDIA) .built_ntl $(BUILT_4TI2)
+$(LATTE_DIR)/config.status: $(LATTE_DIR)/.unpacked_latte $(GMP_DIR)/.built_gmp $(CDDLIB_DIR)/.built_cddlib $(BUILT_LIDIA) $(NTL_DIR)/.built_ntl $(BUILT_4TI2)
 	( cd $(LATTE_DIR) && ./configure --with-default="$(INSTALL_DIR)" --prefix="$(INSTALL_DIR)" --enable-relocatable $(LATTE_SUB_CONFIGURE_ARGS)) 
 ##$(CDDPLUS_DIR)/.built_cddplus  # no longer needed
-.built_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp .built_cddlib $(BUILT_LIDIA) .built_ntl $(BUILT_4TI2)
+.built_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp $(CDDLIB_DIR)/.built_cddlib $(BUILT_LIDIA) $(NTL_DIR)/.built_ntl $(BUILT_4TI2)
 	( cd $(LATTE_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
 ##$(CDDPLUS_DIR)/.built_cddplus 
 clean_latte: 
 	-( rm -f .built_latte && cd $(LATTE_DIR) && $(MAKE) clean )
 distclean_latte: 
 	-( rm -f .built_latte && cd $(LATTE_DIR) && $(MAKE) distclean )
+
+
+## Uninstalling is too hairy, just disable the check for it:
+distuninstallcheck:
+	@:
+
 
 ## Maintainer targets
