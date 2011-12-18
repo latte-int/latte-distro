@@ -14,6 +14,13 @@ directory
 
    dest/bin
 
+If supported on your operating system, LattE is built "relocatable",
+that is, you can move the dest/ subdirectory to a different place, and
+everything should still work.  Alternatively, you can pass the
+--prefix=/SOME/ABSOLUTE/DIRECTORY/NAME option to ./configure to give a
+directory where LattE integrale should be installed instead of the
+dest/ subdirectory.
+
 I hope this LattE integrale distribution works for you.  Compatibility
 notes can be found below.  Please report any failures, so we can
 improve the distribution and also LattE integrale itself.
