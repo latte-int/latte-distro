@@ -2,6 +2,30 @@
 	"for tea, too" distribution.  Changes to LattE integrale itself
 	are described in the latte subdirectory.
 
+	To update this ChangeLog, use `make update-changelog' and then
+	copy (and edit) entries from ChangeLog.svn2cl
+
+2011-12-18  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* configure.ac, Makefile.am: Use libtool, store configure args to
+	pass them to subconfigures.  Use standard autoconf mechanism for
+	setting the default prefix.
+
+	* autogen.sh: Use libtoolize
+
+	* GLPK: Upgrade to 4.47, only to get newer build scripts
+
+	* cddlib-shared-library.patch: New patch to enable shared library
+	  builds of cddlib
+
+	* 4ti2: Upgrade to 1.5.1, fixes shared library build issues
+
+2011-12-16  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* Makefile.am, lidia-base-2.3.0+lattepatches.tar.gz,
+	lidia-base-2.3.0.tar.gz: Rename lidia-base package file name to
+	indicate the latte-specific changes made in release 1.5.1
+
 2011-12-15  Brandon Dutra  <bedutra@ucdavis.edu>
 
 	LattE integrale 1.5.3
@@ -44,6 +68,31 @@
 2010-07-16  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
 	Version 1.4-prerelease-2010-07-16a
+
+2010-07-12 21:53  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* Makefile.am, configure.ac: Merge from version_1_4_branch at
+	revision 1161.
+
+2009-11-15 02:18  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* Makefile.am: Install all of 4ti2 now.
+
+2009-11-15 01:52  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* configure.ac: Fix warnings
+
+2009-11-15 01:51  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* configure.ac: Set AC_CONFIG_AUX_DIR, so "automake
+	  --install-missing" is not fooled
+	  by the presence of install-sh etc. in the parent directory.
+
+2009-11-14 20:52  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* ChangeLog, Makefile.am, README, configure.ac, cdd+-077a.patch,
+	m4/ax_cc_maxopt.m4, m4/ax_cxx_maxopt.m4: Merge distro changes from
+	pre_cxx_zsolve_branch, from which releases 1.2-mk-0.9.x were made
 
 2008-12-17  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
@@ -134,7 +183,7 @@
 2006-10-09  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
 
 	Version 1.2-mk-0.7.1
-	
+
 2006-10-03  Matthias Koeppe  <mkoeppe@mail.math.uni-magdeburg.de>
 
 	Version 1.2-mk-0.7
