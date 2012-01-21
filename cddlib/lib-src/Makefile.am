@@ -14,6 +14,7 @@ include_HEADERS = \
 cdd.h \
 cddmp.h \
 cddtypes.h \
-setoper.h
+setoper.h \
+random.h
 
 AM_CPPFLAGS = -UGMPRATIONAL

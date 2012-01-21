@@ -23,7 +23,8 @@ cddtypes.h \
 cdd_f.h \
 cddmp_f.h \
 cddtypes_f.h \
-setoper.h
+setoper.h \
+random.h
 
 INCLUDES    = $(GMP_CFLAGS)
 AM_CPPFLAGS = -DGMPRATIONAL

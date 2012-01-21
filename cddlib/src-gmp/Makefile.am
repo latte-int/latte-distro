@@ -33,7 +33,7 @@ cdd_both_reps_gmp_SOURCES          = cdd_both_reps.c
 
 LDADD        = ../lib-src-gmp/libcddgmp.la
 
-INCLUDES     = -I../lib-src-gmp
+INCLUDES     = -I$(srcdir)/../lib-src-gmp
 INCLUDES    += $(GMP_CFLAGS)
 
 AM_CPPFLAGS  = -DGMPRATIONAL

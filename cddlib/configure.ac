@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.63])
-AC_INIT([cddlib],[0.94f])
+AC_INIT([cddlib],[0.94f+sage-patches-p8+latte-build-patch])
 AM_INIT_AUTOMAKE([1.11])
 AC_CONFIG_MACRO_DIR([m4])
 

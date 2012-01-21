@@ -33,6 +33,6 @@ cdd_both_reps_SOURCES          = cdd_both_reps.c
 
 LDADD        = ../lib-src/libcdd.la
 
-INCLUDES     = -I../lib-src
+INCLUDES     = -I$(srcdir)/../lib-src
 
 AM_CPPFLAGS  = -UGMPRATIONAL
