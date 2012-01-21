@@ -23,7 +23,7 @@ GMP_DIR=gmp-$(GMP_VERSION)
 ## CDDPLUS_TARGZ=$(top_srcdir)/cdd+-$(CDDPLUS_VERSION).tar.gz
 ## CDDPLUS_DIR=cdd+-$(CDDPLUS_VERSION)
 
-CDDLIB_VERSION=094f
+CDDLIB_VERSION=0.94f+sage-patches-p8+latte-build-patch
 CDDLIB_TARGZ=$(top_srcdir)/cddlib-$(CDDLIB_VERSION).tar.gz
 CDDLIB_DIR=cddlib-$(CDDLIB_VERSION)
 
@@ -37,8 +37,7 @@ LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION)$(LIDIA_BASE_PATCHLEVEL).ta
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
 LATTE_VERSION=$(PACKAGE_VERSION)
-#LATTE_TARGZ=$(top_srcdir)/latte-mk-$(LATTE_VERSION).tar.gz
-LATTE_TARGZ=$(top_srcdir)/latte-int-1.5.tar.gz
+LATTE_TARGZ=$(top_srcdir)/latte-mk-$(LATTE_VERSION).tar.gz
 if ENABLE_LATTE_FROM_SVN
 LATTE_DIR=latte-svn
 LATTE_SVN_URL=https://polyhedron.math.ucdavis.edu/usvn/svn/latte/trunk
@@ -179,9 +178,9 @@ $(CDDLIB_DIR)/.unpacked_cddlib: $(CDDLIB_TARGZ)
 	for a in $(CDDLIB_TARGZ); do						 \
 	  gunzip < $$a | $(TAR) xf - || exit 1;					 \
 	done 									 \
-	&& (cd $(CDDLIB_DIR) && patch -t -p1 ) < $(top_srcdir)/cddlib-shared-library.patch \
 	&& touch $@
-EXTRA_DIST += cddlib-shared-library.patch
+## && (cd $(CDDLIB_DIR) && patch -t -p1 ) < $(top_srcdir)/cddlib-shared-library.patch \
+## EXTRA_DIST += cddlib-shared-library.patch
 $(CDDLIB_DIR)/config.status: $(CDDLIB_DIR)/.unpacked_cddlib $(GMP_DIR)/.built_gmp
 	( cd $(CDDLIB_DIR) && ./configure CXX="$(CXX)" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" --prefix="$(INSTALL_DIR)"  --disable-shared $(LATTE_SUB_CONFIGURE_ARGS)) 
 $(CDDLIB_DIR)/.built_cddlib: $(CDDLIB_DIR)/config.status $(GMP_DIR)/.built_gmp
