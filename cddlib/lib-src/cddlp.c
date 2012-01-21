@@ -13,6 +13,7 @@
 
 #include "setoper.h"  /* set operation library header (Ver. May 18, 2000 or later) */
 #include "cdd.h"
+#include "random.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -22,6 +23,8 @@
 #if defined GMPRATIONAL
 #include "cdd_f.h"
 #endif
+
+#include "random.h"   /* include last - overrides RAND_MAX */
 
 #define dd_CDDLPVERSION  "Version 0.94b (August 25, 2005)"
 
@@ -1755,9 +1758,9 @@ void dd_RandomPermutation2(dd_rowindex OV,long t,unsigned int seed)
   double u,xk,r,rand_max=(double) RAND_MAX;
   int localdebug=dd_FALSE;
 
-  srand(seed);
+  portable_srand(seed);
   for (j=t; j>1 ; j--) {
-    r=rand();
+    r=portable_rand();
     u=r/rand_max;
     xk=(double)(j*u +1);
     k=(long)xk;

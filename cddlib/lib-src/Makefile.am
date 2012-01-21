@@ -1,13 +1,14 @@
-lib_LIBRARIES = libcdd.a
+lib_LTLIBRARIES = libcdd.la
 
-libcdd_a_SOURCES = \
+libcdd_la_SOURCES = \
 cddcore.c \
 cddlp.c	\
 cddmp.c \
 cddio.c \
 cddlib.c \
 cddproj.c \
-setoper.c
+setoper.c \
+random.c
 
 include_HEADERS = \
 cdd.h \
