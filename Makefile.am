@@ -6,7 +6,7 @@ EXTRA_DIST = autogen.sh
 
 ## Distribution variables.
 
-PACKAGES=gmp cddlib ntl latte
+PACKAGES=gmp cddlib ntl
 ##PACKAGES+=cddplus  # No longer needed
 if ENABLE_LIDIA
 PACKAGES+=lidia
@@ -14,8 +14,11 @@ endif
 if ENABLE_4TI2
 PACKAGES+=glpk 4ti2
 endif
+if ENABLE_LATTE
+PACKAGES+=latte
+endif
 
-GMP_VERSION=4.2.4
+GMP_VERSION=5.1.2
 GMP_TARGZ=$(top_srcdir)/gmp-$(GMP_VERSION).tar.gz
 GMP_DIR=gmp-$(GMP_VERSION)
 
@@ -37,14 +40,14 @@ LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION)$(LIDIA_BASE_PATCHLEVEL).ta
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
 LATTE_VERSION=$(PACKAGE_VERSION)
-LATTE_TARGZ=$(top_srcdir)/latte-mk-$(LATTE_VERSION).tar.gz
+#LATTE_VERSION=1.5
+LATTE_TARGZ=$(top_srcdir)/latte-int-$(LATTE_VERSION).tar.gz
 if ENABLE_LATTE_FROM_SVN
 LATTE_DIR=latte-svn
 LATTE_SVN_URL=https://polyhedron.math.ucdavis.edu/usvn/svn/latte/trunk
 else
-LATTE_DIR=latte-int-1.5
+LATTE_DIR=latte-int-$(LATTE_VERSION)
 #LATTE_DIR=../latte
-
 endif
 
 # GLPK is a prerequisite of 4ti2
@@ -52,7 +55,7 @@ GLPK_VERSION=4.47
 GLPK_TARGZ=$(top_srcdir)/glpk-$(GLPK_VERSION).tar.gz
 GLPK_DIR=glpk-$(GLPK_VERSION)
 
-FORTYTWO_VERSION=1.5.1
+FORTYTWO_VERSION=1.5.3-prerelease-2013-07-20
 FORTYTWO_TARGZ=$(top_srcdir)/4ti2-$(FORTYTWO_VERSION).tar.gz
 FORTYTWO_DIR=4ti2-$(FORTYTWO_VERSION)
 
@@ -182,7 +185,7 @@ $(CDDLIB_DIR)/.unpacked_cddlib: $(CDDLIB_TARGZ)
 ## && (cd $(CDDLIB_DIR) && patch -t -p1 ) < $(top_srcdir)/cddlib-shared-library.patch \
 ## EXTRA_DIST += cddlib-shared-library.patch
 $(CDDLIB_DIR)/config.status: $(CDDLIB_DIR)/.unpacked_cddlib $(GMP_DIR)/.built_gmp
-	( cd $(CDDLIB_DIR) && ./configure CXX="$(CXX)" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" --prefix="$(INSTALL_DIR)"  --disable-shared $(LATTE_SUB_CONFIGURE_ARGS)) 
+	( cd $(CDDLIB_DIR) && ./configure --prefix="$(INSTALL_DIR)"  --disable-shared $(LATTE_SUB_CONFIGURE_ARGS) CXX="$(CXX)" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ) 
 $(CDDLIB_DIR)/.built_cddlib: $(CDDLIB_DIR)/config.status $(GMP_DIR)/.built_gmp
 	( cd $(CDDLIB_DIR) && $(MAKE) LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" && $(MAKE) install ) && touch $@
 clean_cddlib: 
@@ -216,7 +219,7 @@ $(GLPK_DIR)/.unpacked_glpk: $(GLPK_TARGZ)
 	gunzip < $(GLPK_TARGZ) | $(TAR) xf - 					\
 	&& touch $@
 $(GLPK_DIR)/config.status: $(GLPK_DIR)/.unpacked_glpk $(GMP_DIR)/.built_gmp
-	( cd $(GLPK_DIR) && CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ./configure --prefix="$(INSTALL_DIR)" --disable-shared $(GLPK_CONFIGURE_OPTIONS) $(LATTE_SUB_CONFIGURE_ARGS))
+	( cd $(GLPK_DIR) && ./configure --prefix="$(INSTALL_DIR)" --disable-shared $(GLPK_CONFIGURE_OPTIONS) $(LATTE_SUB_CONFIGURE_ARGS) CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" )
 $(GLPK_DIR)/.built_glpk: $(GLPK_DIR)/config.status
 	( cd $(GLPK_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
 clean_glpk: 
@@ -231,7 +234,7 @@ $(FORTYTWO_DIR)/.unpacked_4ti2: $(FORTYTWO_TARGZ)
 	gunzip < $(FORTYTWO_TARGZ) | $(TAR) xf - 					\
 	&& touch $@
 $(FORTYTWO_DIR)/config.status: $(FORTYTWO_DIR)/.unpacked_4ti2 $(GLPK_DIR)/.built_glpk $(GMP_DIR)/.built_gmp
-	( cd $(FORTYTWO_DIR) && CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ./configure --prefix="$(INSTALL_DIR)" --with-gmp="$(INSTALL_DIR)" --with-glpk="$(INSTALL_DIR)" --disable-shared $(FORTYTWO_CONFIGURE_OPTIONS) $(LATTE_SUB_CONFIGURE_ARGS))
+	( cd $(FORTYTWO_DIR) &&  ./configure --prefix="$(INSTALL_DIR)" --with-gmp="$(INSTALL_DIR)" --with-glpk="$(INSTALL_DIR)" --disable-shared $(FORTYTWO_CONFIGURE_OPTIONS) $(LATTE_SUB_CONFIGURE_ARGS) CC="$(CC)" CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS) -I$(INSTALL_DIR)/include" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib")
 ## We currently have header file clashes between zsolve and groebner on Mac OS,
 ## due to semi-case-insensitivity.  Work around for now, by only installing 
 ## the header files of groebner -- we only need those... 
@@ -270,7 +273,7 @@ $(LATTE_DIR)/.unpacked_latte: $(LATTE_TARGZ)
 	done && touch $@
 endif
 $(LATTE_DIR)/config.status: $(LATTE_DIR)/.unpacked_latte $(GMP_DIR)/.built_gmp $(CDDLIB_DIR)/.built_cddlib $(BUILT_LIDIA) $(NTL_DIR)/.built_ntl $(BUILT_4TI2)
-	( cd $(LATTE_DIR) && ./configure --with-default="$(INSTALL_DIR)" --prefix="$(INSTALL_DIR)" --enable-relocatable $(LATTE_SUB_CONFIGURE_ARGS)) 
+	( cd $(LATTE_DIR) && ./configure --with-default="$(INSTALL_DIR)" --prefix="$(INSTALL_DIR)" --enable-relocatable --disable-shared $(LATTE_SUB_CONFIGURE_ARGS)) 
 ##$(CDDPLUS_DIR)/.built_cddplus  # no longer needed
 .built_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp $(CDDLIB_DIR)/.built_cddlib $(BUILT_LIDIA) $(NTL_DIR)/.built_ntl $(BUILT_4TI2)
 	( cd $(LATTE_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
