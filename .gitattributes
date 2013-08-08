@@ -201,7 +201,6 @@ cddlib/src/testlp3.c -text
 cddlib/src/testshoot.c -text
 cddlib/src/testuniq.c -text
 /glpk-4.47.tar.gz -text
-/gmp-4.2.4.tar.gz -text
 /gmp-5.1.2.tar.gz -text
 /lidia-FF-2.3.0.tar.gz -text
 /lidia-LA-2.3.0.tar.gz -text
