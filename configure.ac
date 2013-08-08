@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(latte-integrale, 1.5.3+svn)
+AC_INIT(latte-integrale, 1.6-prerelease-2013-08-07)
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_TARGET
 
@@ -44,6 +44,12 @@ AM_CONDITIONAL(ENABLE_4TI2, test x${enable_4ti2} = xyes)
 AC_ARG_ENABLE(latte-from-svn, AS_HELP_STRING([--enable-latte-from-svn], [Get cutting edge LattE from Subversion server instead of packaged LattE.]),
 			      [enable_latte_from_svn=yes])
 AM_CONDITIONAL(ENABLE_LATTE_FROM_SVN, test x${enable_latte_from_svn} = xyes)
+
+AC_ARG_ENABLE(latte, AS_HELP_STRING([--disable-latte],
+				[Do not build latte.]), , 
+		[enable_latte=yes])
+AC_SUBST(ENABLE_LATTE, ${enable_latte})
+AM_CONDITIONAL(ENABLE_LATTE, test x${enable_latte} = xyes)
 
 # For Solaris/SPARC, we need to request ABI=32 for GMP builds
 # because it will build a 64-bit library instead.

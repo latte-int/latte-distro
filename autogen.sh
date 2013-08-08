@@ -1,5 +1,5 @@
 #! /bin/sh
 aclocal -I m4
 autoconf
-libtoolize --force
+libtoolize --force || glibtoolize --force
 automake --add-missing
