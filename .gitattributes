@@ -202,9 +202,6 @@ cddlib/src/testshoot.c -text
 cddlib/src/testuniq.c -text
 /glpk-4.47.tar.gz -text
 /gmp-5.1.2.tar.gz -text
-/lidia-FF-2.3.0.tar.gz -text
-/lidia-LA-2.3.0.tar.gz -text
-/lidia-base-2.3.0+lattepatches.tar.gz -text
 lidia/.LIDIA_SOURCE_DIR -text
 lidia/COPYING -text
 lidia/ChangeLog -text
