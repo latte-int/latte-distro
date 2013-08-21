@@ -6,6 +6,23 @@ included in this distribution is free software.
 
 To build:
 
+Prerequisites:
+
+ * On Linux, nothing special.  
+
+ * On Mac OS X, you need the XCode 2 command line tools.
+
+ * On Windows, install Cygwin and, beyond the standard packages, also
+   packages "gcc", "g++", "make", "m4".
+
+Make sure you have unpacked this distribution in a build directory
+without a space in its name (this is to work around a limitation in
+libtool).  (Note that on Windows, the user's home directory usually
+has a space in its name.  Use instead, for example, /cygdrive/c/latte;
+this corresponds to C:\LATTE.)
+
+Then type in the shell:
+
    ./configure
    make
 
@@ -20,6 +37,13 @@ everything should still work.  Alternatively, you can pass the
 --prefix=/SOME/ABSOLUTE/DIRECTORY/NAME option to ./configure to give a
 directory where LattE integrale should be installed instead of the
 dest/ subdirectory.
+
+By default, all programs are linked statically.  To build and use
+shared libraries, invoke configure with --enable-shared.  This does
+not work on all platform (for example, it does not work on Cygwin.)
+Also, note that shared library builds are not completely relocatable:
+LattE itself (in most modes) works, but other binaries (4ti2, cddlib,
+...) don't.
 
 I hope this LattE integrale distribution works for you.  Compatibility
 notes can be found below.  Please report any failures, so we can
