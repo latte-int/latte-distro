@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(latte-integrale, 1.6-prerelease-2013-08-07)
+AC_INIT(latte-integrale, 1.6-prerelease-2013-08-28)
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_TARGET
 
@@ -54,7 +54,7 @@ AM_CONDITIONAL(ENABLE_LATTE, test x${enable_latte} = xyes)
 # For Solaris/SPARC, we need to request ABI=32 for GMP builds
 # because it will build a 64-bit library instead.
 case ${target_cpu} in
-sparc) 
+*sparc*) 
        AC_CHECK_SIZEOF(void *)
        if test x${ac_cv_sizeof_void_p} = x4; then
               gmp_configure_options="ABI=32"
