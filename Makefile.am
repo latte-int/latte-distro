@@ -34,13 +34,12 @@ NTL_VERSION=5.5.2
 NTL_TARGZ=$(top_srcdir)/ntl-$(NTL_VERSION).tar.gz
 NTL_DIR=ntl-$(NTL_VERSION)
 
-LIDIA_VERSION=2.3.0
-LIDIA_BASE_PATCHLEVEL=+lattepatches
-LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION)$(LIDIA_BASE_PATCHLEVEL).tar.gz $(top_srcdir)/lidia-FF-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-LA-$(LIDIA_VERSION).tar.gz
+LIDIA_VERSION=2.3.0+latte-patches-2013-08-09
+LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-FF-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-LA-$(LIDIA_VERSION).tar.gz
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
 LATTE_VERSION=$(PACKAGE_VERSION)
-#LATTE_VERSION=1.5
+#LATTE_VERSION=1.6-prerelease-2013-08-20
 LATTE_TARGZ=$(top_srcdir)/latte-int-$(LATTE_VERSION).tar.gz
 if ENABLE_LATTE_FROM_SVN
 LATTE_DIR=latte-svn
@@ -55,7 +54,7 @@ GLPK_VERSION=4.47
 GLPK_TARGZ=$(top_srcdir)/glpk-$(GLPK_VERSION).tar.gz
 GLPK_DIR=glpk-$(GLPK_VERSION)
 
-FORTYTWO_VERSION=1.5.3-prerelease-2013-08-02
+FORTYTWO_VERSION=1.6
 FORTYTWO_TARGZ=$(top_srcdir)/4ti2-$(FORTYTWO_VERSION).tar.gz
 FORTYTWO_DIR=4ti2-$(FORTYTWO_VERSION)
 
@@ -245,6 +244,8 @@ clean_4ti2:
 	-( rm -f $(FORTYTWO_DIR)/.built_4ti2 && cd $(FORTYTWO_DIR) && $(MAKE) clean )
 distclean_4ti2: 
 	-( rm -f $(FORTYTWO_DIR)/.built_4ti2 && cd $(FORTYTWO_DIR) && $(MAKE) distclean )
+check-4ti2: $(FORTYTWO_DIR)/.built_4ti2
+	( cd $(FORTYTWO_DIR) && make check )
 
 # LattE.
 
@@ -282,7 +283,17 @@ clean_latte:
 	-( rm -f .built_latte && cd $(LATTE_DIR) && $(MAKE) clean )
 distclean_latte: 
 	-( rm -f .built_latte && cd $(LATTE_DIR) && $(MAKE) distclean )
+check-latte:
+	( cd $(LATTE_DIR) && $(MAKE) check && $(MAKE) installcheck )
 
+## Some checking:
+
+if ENABLE_4TI2
+check-local: check-4ti2
+endif
+if ENABLE_LATTE
+check-local: check-latte   
+endif
 
 ## Uninstalling is too hairy, just disable the check for it:
 distuninstallcheck:
@@ -292,5 +303,5 @@ distuninstallcheck:
 ## Maintainer targets
 
 update-changelog: 
-	(cd $(srcdir) && svn2cl --output=ChangeLog.svn2cl --authors=.svn2cl-authors)
+	(cd $(srcdir) && svn2cl --output=ChangeLog.svn2cl --authors=.svn2cl-authors https://svn-mkoeppe.math.ucdavis.edu/usvn/svn/latte/distro)
 
