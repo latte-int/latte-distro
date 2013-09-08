@@ -5,6 +5,78 @@
 	To update this ChangeLog, use `make update-changelog' and then
 	copy (and edit) entries from ChangeLog.svn2cl
 
+2013-09-07  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	LattE integrale "for tea, too" version 1.6
+
+2013-09-07 23:20  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* Makefile.am: Upgrade 4ti2 to version 1.6
+
+	  `make check' now runs check targets for 4ti2 and latte.
+
+2013-09-05 21:10  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* configure.ac: Make test for sparc architecture more inclusive.
+	  Seems to fix build problem on Solaris, as reported by Dima
+	  Pasechnik.
+
+2013-08-10 01:28  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* Makefile.am, lidia-FF-2.3.0+latte-patches-2013-08-09.tar.gz,
+	lidia-LA-2.3.0+latte-patches-2013-08-09.tar.gz,
+	lidia-base-2.3.0+latte-patches-2013-08-09.tar.gz: Build and use
+	these updated LiDIA packages.
+
+2013-08-10 00:51  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* lidia/src/base/include/LiDIA/dense_field_matrix.cc,
+	  lidia/src/base/include/LiDIA/field_polynomial.cc,
+	  lidia/src/base/include/LiDIA/indexed_hash_table.cc,
+	  lidia/src/base/include/LiDIA/math_vector.cc,
+	  lidia/src/base/include/LiDIA/sort_vector.cc,
+	  lidia/src/base/include/LiDIA/sparse_field_matrix.cc,
+	  lidia/src/finite_fields/include/LiDIA/sparse_power_series.cc,
+	  lidia/src/linear_algebra/include/LiDIA/matrix/dense_bigint_matrix_modules.cc:
+	  Patch for gcc 4.7.3. From Dimitrii Pasechnik
+
+2013-08-10 00:50  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* lidia/src/base/system/precondition_error.cc: Patch to fix for gcc
+	  4.3 syntax
+
+2013-08-10 00:48  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* lidia: Import complete LiDIA 2.3.0.
+	  Recovered from Zaf's experimental Sage package.
+
+2013-08-08 06:56  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* Upgrade gmp to 5.1.2
+
+2013-08-02 06:17  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* Makefile.am: Set CPPFLAGS etc. variables after the
+	  $(LATTE_SUB_CONFIGURE_ARGS).
+
+2012-01-23  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* Upgrade 4ti2 to 1.5.2
+
+2012-01-21  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* Use our own cddlib distribution, which includes build patches
+	from Sage and our own build patches.
+
+2012-01-21  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* Modify the cddlib build system (on top of the Sage patches)
+	  so that make distcheck works.
+
+2012-01-21  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	* Import cddlib-094f.p8.spkg from Sage
+
 2011-12-18  Matthias Koeppe <mkoeppe@math.ucdavis.edu>
 
 	* configure.ac, Makefile.am: Use libtool, store configure args to
