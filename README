@@ -10,10 +10,12 @@ Prerequisites:
 
  * On Linux, nothing special.  
 
- * On Mac OS X, you need the XCode 2 command line tools.
+ * On Mac OS X, you need the XCode command line tools.
 
  * On Windows, install Cygwin and, beyond the standard packages, also
    packages "gcc", "g++", "make", "m4".
+
+ * On Solaris, a version of gcc.
 
 Make sure you have unpacked this distribution in a build directory
 without a space in its name (this is to work around a limitation in
