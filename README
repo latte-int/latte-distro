@@ -55,18 +55,60 @@ Enjoy!
    for the LattE team
 
 
-
-
-
 				*  *  *
 
-This or a previous release of LattE "for tea, too" has successfully
+Information for building packages for Linux distributions, Sage packages, etc.:
+
+  Do not attempt to use this "distribution" package.  Rather build
+  separate packages for LattE integrale and each of the bundled
+  libraries.  We use modified versions of some upstream libraries;
+  consider using our versions instead of upstream for your distribution. 
+
+  cddlib: 
+
+    Our version adds a few more build system changes on top of the
+    non-upstream version distributed as a Sage package.
+
+  LiDIA: 
+
+    Upstream development has ceased; download URL was defunct as of
+    August 2013.  Our version is derived from an experimental Sage
+    package.  Our version adds a number of build fixes for current gcc
+    version.
+
+  4ti2: 
+
+    We used to include special releases of 4ti2 only released through
+    this "Latte for tea, too" distribution and not announced on 4ti2.
+    As of version 1.6, we are back to standard upstream.
+
+  
+				*  *  *
+
+This release 1.6 of LattE integrale (or a prerelease of it) has
+successfully built on:
+
+  * Mac OS X (Intel) 10.8.4 with XCode 4.6.3 (GCC 4.2.1)
+
+  * Mac OS X (Intel) 10.8.4 with GCC 4.8.1 from Fink
+
+  * Mac OS X (PPC)
+
+  * Ubuntu Linux 12.04.2 LTS (x86_64) with GCC 4.6.3-1ubuntu5
+
+  * Ubuntu Linux 11.10 "Oneiric Ocelot" (x86_64) with GCC 4.6.1-9ubuntu3
+
+  * Gentoo Linux with GCC 4.6
+
+  * Windows XP with Cygwin of July 2013
+
+  * Solaris 10 (UltraSPARC) in 32 bit mode with GCC 4.5.1
+
+
+A previous release of LattE "for tea, too" has successfully
 built on:
 
   * Solaris 9 on SPARC in 32-bit mode with GCC 3.3.2
-
-    To build on Solaris, make sure you have a recent version of the
-    GNU "patch" program installed and accessible in your PATH.
 
   * Solaris 9 on SPARC in 32-bit mode and 64-bit mode with GCC 4.1.1 and 4.2.0
 
@@ -132,8 +174,8 @@ compile time by parallelizing the build:  For instance, on a
 
    make -j4
 
-(Because of parallelization bugs in some of the Makefiles, the
-parallelized build might get stuck; in this case, repeat the "make
+(Because of parallelization bugs in some of the Makefiles (not ours!),
+the parallelized build might get stuck; in this case, repeat the "make
 -j4" until the build is finished.)
 
 
