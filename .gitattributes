@@ -204,7 +204,6 @@ cddlib/src/testshoot.c -text
 cddlib/src/testuniq.c -text
 /glpk-4.47.tar.gz -text
 /gmp-5.1.2.tar.gz -text
-/latte-int-1.5.tar.gz -text
 /latte-int-1.6.tar.gz -text
 /lidia-FF-2.3.0+latte-patches-2013-08-09.tar.gz -text
 /lidia-LA-2.3.0+latte-patches-2013-08-09.tar.gz -text
