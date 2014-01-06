@@ -18,7 +18,7 @@ if ENABLE_LATTE
 PACKAGES+=latte
 endif
 
-GMP_VERSION=5.1.2
+GMP_VERSION=5.1.3
 GMP_TARGZ=$(top_srcdir)/gmp-$(GMP_VERSION).tar.gz
 GMP_DIR=gmp-$(GMP_VERSION)
 
@@ -30,7 +30,7 @@ CDDLIB_VERSION=0.94f+sage-patches-p8+latte-build-patch
 CDDLIB_TARGZ=$(top_srcdir)/cddlib-$(CDDLIB_VERSION).tar.gz
 CDDLIB_DIR=cddlib-$(CDDLIB_VERSION)
 
-NTL_VERSION=5.5.2
+NTL_VERSION=6.0.0
 NTL_TARGZ=$(top_srcdir)/ntl-$(NTL_VERSION).tar.gz
 NTL_DIR=ntl-$(NTL_VERSION)
 
