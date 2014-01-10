@@ -1,6 +1,6 @@
 * text=auto !eol
 /.svn2cl-authors -text
-/4ti2-1.6.tar.gz -text
+/4ti2-1.6.1.tar.gz -text
 /cddlib-0.94f+sage-patches-p8+latte-build-patch.tar.gz -text
 cddlib/AUTHORS -text
 cddlib/COPYING -text
