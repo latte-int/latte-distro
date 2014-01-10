@@ -34,7 +34,7 @@ NTL_VERSION=6.0.0
 NTL_TARGZ=$(top_srcdir)/ntl-$(NTL_VERSION).tar.gz
 NTL_DIR=ntl-$(NTL_VERSION)
 
-LIDIA_VERSION=2.3.0+latte-patches-2013-08-09
+LIDIA_VERSION=2.3.0+latte-patches-2014-01-05
 LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-FF-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-LA-$(LIDIA_VERSION).tar.gz
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
@@ -54,7 +54,7 @@ GLPK_VERSION=4.47
 GLPK_TARGZ=$(top_srcdir)/glpk-$(GLPK_VERSION).tar.gz
 GLPK_DIR=glpk-$(GLPK_VERSION)
 
-FORTYTWO_VERSION=1.6
+FORTYTWO_VERSION=1.6.1
 FORTYTWO_TARGZ=$(top_srcdir)/4ti2-$(FORTYTWO_VERSION).tar.gz
 FORTYTWO_DIR=4ti2-$(FORTYTWO_VERSION)
 
@@ -305,3 +305,11 @@ distuninstallcheck:
 update-changelog: 
 	(cd $(srcdir) && svn2cl --output=ChangeLog.svn2cl --authors=.svn2cl-authors https://svn-mkoeppe.math.ucdavis.edu/usvn/svn/latte/distro)
 
+# The following targets assume that prefix has not been altered to point to some shared directory.
+BINDISTNAME=$(PACKAGE)-$(VERSION)-$(target_triplet)
+
+$(BINDISTNAME).zip: install
+	(cd ${prefix} && zip -rq $(abs_builddir)/$@ .)
+
+
+binary-dist: $(BINDISTNAME).zip
