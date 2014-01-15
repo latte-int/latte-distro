@@ -5,11 +5,19 @@
 	To update this ChangeLog, use `make update-changelog' and then
 	copy (and edit) entries from ChangeLog.svn2cl
 
+2014-01-14  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	* Makefile.am: Upgrade GLPK to 4.52.1 (for no particular reason)
+	and 4ti2 to 1.6.2 (to fix compile problems on Mac OS X and to
+	address changes to the GLPK API).
+
 2014-01-06  Brandon Dutra  <bedutra@ucdavis.edu>
 
 	LattE integrale version 1.7
-	gmp version 5.1.3
-	ntl version 6.0.0
+
+2014-01-06  Brandon Dutra  <bedutra@ucdavis.edu>
+
+	* Makefile.am: Upgrade GMP to version 5.1.3 and NTL to version 6.0.0
 
 2013-09-07  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
