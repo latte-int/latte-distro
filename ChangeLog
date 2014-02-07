@@ -5,6 +5,10 @@
 	To update this ChangeLog, use `make update-changelog' and then
 	copy (and edit) entries from ChangeLog.svn2cl
 
+2014-02-06  Brandon Dutra  <bedutra@ucdavis.edu>
+
+	LattE integrale version 1.7.1
+
 2014-01-14  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
 	* Makefile.am: Upgrade GLPK to 4.52.1 (for no particular reason)
