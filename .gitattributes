@@ -222,6 +222,7 @@ lidia/README -text
 lidia/TODO -text
 lidia/acinclude.m4 -text
 lidia/aclocal.m4 -text
+lidia/bootstrap -text
 lidia/config.guess -text
 lidia/config.h.in -text
 lidia/config.sub -text
