@@ -1,8 +1,9 @@
 This is LattE integrale "for tea, too", a source code distribution of 
 of LattE integrale and 4ti2 with all prerequisite libraries.
 
-Except for the optional library LiDIA, all software
-included in this distribution is free software.
+All software included in this distribution is free software; with some
+caveats regarding LiDIA (see notes at the bottom). 
+
 
 To build:
 
@@ -23,6 +24,12 @@ libtool).  (Note that on Windows, the user's home directory usually
 has a space in its name.  Use instead, for example, /cygdrive/c/latte;
 this corresponds to C:\LATTE.)
 
+Optionally, if you have Maple, make sure that the directory where the
+command-line executable of Maple lives ("maple" or, on Windows,
+"cmaple.exe") is in your path:
+
+   export PATH="/path/to/maple/directory:$PATH"
+
 Then type in the shell:
 
    ./configure
@@ -38,7 +45,9 @@ that is, you can move the dest/ subdirectory to a different place, and
 everything should still work.  Alternatively, you can pass the
 --prefix=/SOME/ABSOLUTE/DIRECTORY/NAME option to ./configure to give a
 directory where LattE integrale should be installed instead of the
-dest/ subdirectory.
+dest/ subdirectory.  For example:
+
+   ./configure --prefix=/usr/local
 
 By default, all programs are linked statically.  To build and use
 shared libraries, invoke configure with --enable-shared.  This does
@@ -76,7 +85,9 @@ Information for building packages for Linux distributions, Sage packages, etc.:
     Upstream development has ceased; download URL was defunct as of
     August 2013.  Our version is derived from an experimental Sage
     package.  Our version adds a number of build fixes for current gcc
-    version.
+    version.  It is also available from:
+
+        https://github.com/mkoeppe/LiDIA
 
   4ti2: 
 
@@ -87,7 +98,7 @@ Information for building packages for Linux distributions, Sage packages, etc.:
   
 				*  *  *
 
-This release 1.6 of LattE integrale (or a prerelease of it) has
+Release 1.6 of LattE integrale (or a prerelease of it) has
 successfully built on:
 
   * Mac OS X (Intel) 10.8.4 with XCode 4.6.3 (GCC 4.2.1)
@@ -180,4 +191,13 @@ compile time by parallelizing the build:  For instance, on a
 the parallelized build might get stuck; in this case, repeat the "make
 -j4" until the build is finished.)
 
+				*  *  *
+
+Note on the license of LiDIA:
+
+The status of LiDIA is unclear.  It comes with a "free for
+non-commercial purposes" license, but developers stated that they have
+agreed to release it as free software under the GPL.  See
+
+   https://lists.debian.org/debian-legal/2007/07/msg00120.html
 
