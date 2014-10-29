@@ -1,9 +1,14 @@
+
 	This ChangeLog only describes the changes to the LattE integrale
 	"for tea, too" distribution.  Changes to LattE integrale itself
 	are described in the latte subdirectory.
 
 	To update this ChangeLog, use `make update-changelog' and then
 	copy (and edit) entries from ChangeLog.svn2cl
+
+2014-10-28  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	* Makefile.am: Upgrade LiDIA.
 
 2014-02-06  Brandon Dutra  <bedutra@ucdavis.edu>
 
