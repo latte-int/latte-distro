@@ -1,10 +1,22 @@
-
+	
 	This ChangeLog only describes the changes to the LattE integrale
 	"for tea, too" distribution.  Changes to LattE integrale itself
 	are described in the latte subdirectory.
 
 	To update this ChangeLog, use `make update-changelog' and then
 	copy (and edit) entries from ChangeLog.svn2cl
+
+
+2015-04-28 Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	* Upgrade 4ti2 to 1.6.3
+	  Upgraded LattE to 1.7.3
+
+2014-10-04 Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	* Fix compile errors with Apple LLVM version 6.0 (clang-600.0.51) (based on LLVM 3.5svn)
+	  Version 1.7.2
+
 
 2014-10-28  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
