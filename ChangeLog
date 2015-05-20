@@ -1,4 +1,4 @@
-	
+
 	This ChangeLog only describes the changes to the LattE integrale
 	"for tea, too" distribution.  Changes to LattE integrale itself
 	are described in the latte subdirectory.
@@ -7,7 +7,13 @@
 	copy (and edit) entries from ChangeLog.svn2cl
 
 
+2015-05-19  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	* Upgrade 4ti2 to 1.6.5
+
 2015-04-28 Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	Version 1.7.3
 
 	* Upgrade 4ti2 to 1.6.3
 	  Upgraded LattE to 1.7.3
