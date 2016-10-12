@@ -1,6 +1,6 @@
 * text=auto !eol
 /.svn2cl-authors -text
-/4ti2-1.6.5.tar.gz -text
+/4ti2-1.6.7.tar.gz -text
 /cddlib-0.94f+sage-patches-p8+latte-build-patch.tar.gz -text
 cddlib/AUTHORS -text
 cddlib/COPYING -text
@@ -199,9 +199,7 @@ cddlib/src/testlp2.c -text
 cddlib/src/testlp3.c -text
 cddlib/src/testshoot.c -text
 cddlib/src/testuniq.c -text
-/glpk-4.47.tar.gz -text
 /glpk-4.52.1.tar.gz -text
-/gmp-5.1.3.tar.gz -text
 /gmp-6.1.0.tar.bz2 -text
 /latte-int-1.7.3.tar.gz -text
 /lidia-FF-2.3.0+latte-patches-2014-10-04.tar.gz -text

@@ -18,8 +18,8 @@ if ENABLE_LATTE
 PACKAGES+=latte
 endif
 
-GMP_VERSION=5.1.3
-GMP_TARGZ=$(top_srcdir)/gmp-$(GMP_VERSION).tar.gz
+GMP_VERSION=6.1.0
+GMP_TARGZ=$(top_srcdir)/gmp-$(GMP_VERSION).tar.bz2
 GMP_DIR=gmp-$(GMP_VERSION)
 
 ## CDDPLUS_VERSION=077a
@@ -38,8 +38,8 @@ LIDIA_VERSION=2.3.0+latte-patches-2014-10-04
 LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-FF-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia-LA-$(LIDIA_VERSION).tar.gz
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
-LATTE_VERSION=$(PACKAGE_VERSION)
-#LATTE_VERSION=1.6-prerelease-2013-08-20
+#LATTE_VERSION=$(PACKAGE_VERSION)
+LATTE_VERSION=1.7.3
 LATTE_TARGZ=$(top_srcdir)/latte-int-$(LATTE_VERSION).tar.gz
 if ENABLE_LATTE_FROM_SVN
 LATTE_DIR=latte-svn
@@ -54,7 +54,7 @@ GLPK_VERSION=4.52.1
 GLPK_TARGZ=$(top_srcdir)/glpk-$(GLPK_VERSION).tar.gz
 GLPK_DIR=glpk-$(GLPK_VERSION)
 
-FORTYTWO_VERSION=1.6.5
+FORTYTWO_VERSION=1.6.7
 FORTYTWO_TARGZ=$(top_srcdir)/4ti2-$(FORTYTWO_VERSION).tar.gz
 FORTYTWO_DIR=4ti2-$(FORTYTWO_VERSION)
 
@@ -110,7 +110,7 @@ build_gmp: $(GMP_DIR)/.built_gmp
 configure_gmp: $(GMP_DIR)/config.status
 #EXTRA_DIST += gmp-4.2.1-patch
 $(GMP_DIR)/.unpacked_gmp: $(GMP_TARGZ)
-	gunzip < $(GMP_TARGZ) | $(TAR) xf - 					\
+	$(TAR) xf $(GMP_TARGZ) 					\
 	&& touch $@
 # (cd $(GMP_DIR) && patch -t -p1 ) < $(top_srcdir)/gmp-4.2.1-patch	
 $(GMP_DIR)/config.status: $(GMP_DIR)/.unpacked_gmp
