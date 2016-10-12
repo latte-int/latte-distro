@@ -6,10 +6,15 @@
 	To update this ChangeLog, use `make update-changelog' and then
 	copy (and edit) entries from ChangeLog.svn2cl
 
+2016-10-12 Matthias Koeppe <mkoeppe@math.ucdavis.edu>
+
+	Version 1.7.3b
+
+	* Makefile.am: Upgrade GMP to 6.1.0, 4ti2 to 1.6.7
 
 2015-05-19  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
-	* Upgrade 4ti2 to 1.6.5
+	* Makefile.am: Upgrade 4ti2 to 1.6.5
 
 2015-04-28 Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
 
