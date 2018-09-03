@@ -2,19 +2,22 @@ language: cpp
 
 sudo: false
 
+os:
+ - linux
+ - osx
+
+compiler:
+ - gcc
+ - clang
+
+env:
+ -
+ - CONFIGURE_FLAGS="--enable-shared"
+
 matrix:
   include:
-    - os: linux
-      env:
-       -
-    - os: linux
-      env:
-      compiler: clang
-    - os: osx
-      env:
-       -
     - services:
-      - docker
+       - docker
       env:
        - DOCKER=i386/ubuntu
 
