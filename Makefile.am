@@ -26,7 +26,7 @@ GMP_DIR=gmp-$(GMP_VERSION)
 ## CDDPLUS_TARGZ=$(top_srcdir)/cdd+-$(CDDPLUS_VERSION).tar.gz
 ## CDDPLUS_DIR=cdd+-$(CDDPLUS_VERSION)
 
-CDDLIB_VERSION=0.94f+sage-patches-p8+latte-build-patch
+CDDLIB_VERSION=0.94j
 CDDLIB_TARGZ=$(top_srcdir)/cddlib-$(CDDLIB_VERSION).tar.gz
 CDDLIB_DIR=cddlib-$(CDDLIB_VERSION)
 
@@ -172,8 +172,6 @@ distclean_lidia:
 
 # cddlib.
 #
-# cddlib 094b has a hard-coded location of GMP in /usr/local in its Makefile.am(!)
-# We work around this by passing LDFLAGS to both configure and make.
 build_cddlib: $(CDDLIB_DIR)/.built_cddlib
 configure_cddlib: $(CDDLIB_DIR)/config.status $(GMP_DIR)/.built_gmp
 $(CDDLIB_DIR)/.unpacked_cddlib: $(CDDLIB_TARGZ)
@@ -186,7 +184,7 @@ $(CDDLIB_DIR)/.unpacked_cddlib: $(CDDLIB_TARGZ)
 $(CDDLIB_DIR)/config.status: $(CDDLIB_DIR)/.unpacked_cddlib $(GMP_DIR)/.built_gmp
 	( cd $(CDDLIB_DIR) && ./configure --prefix="$(INSTALL_DIR)"  --disable-shared $(LATTE_SUB_CONFIGURE_ARGS) CXX="$(CXX)" CFLAGS="$(CFLAGS) -I$(INSTALL_DIR)/include" CXXFLAGS="$(CXXFLAGS) -I$(INSTALL_DIR)/include" LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" ) 
 $(CDDLIB_DIR)/.built_cddlib: $(CDDLIB_DIR)/config.status $(GMP_DIR)/.built_gmp
-	( cd $(CDDLIB_DIR) && $(MAKE) LDFLAGS="$(LDFLAGS) -L$(INSTALL_DIR)/lib" && $(MAKE) install ) && touch $@
+	( cd $(CDDLIB_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
 clean_cddlib: 
 	-( rm -f $(CDDLIB_DIR)/.built_cddlib && cd $(CDDLIB_DIR) && $(MAKE) clean )
 distclean_cddlib: 
