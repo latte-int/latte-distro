@@ -18,7 +18,7 @@ if ENABLE_LATTE
 PACKAGES+=latte
 endif
 
-GMP_VERSION=6.1.0
+GMP_VERSION=6.1.2
 GMP_TARGZ=$(top_srcdir)/gmp-$(GMP_VERSION).tar.bz2
 GMP_DIR=gmp-$(GMP_VERSION)
 
