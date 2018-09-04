@@ -30,7 +30,7 @@ CDDLIB_VERSION=0.94j
 CDDLIB_TARGZ=$(top_srcdir)/cddlib-$(CDDLIB_VERSION).tar.gz
 CDDLIB_DIR=cddlib-$(CDDLIB_VERSION)
 
-NTL_VERSION=6.0.0
+NTL_VERSION=11.3.0
 NTL_TARGZ=$(top_srcdir)/ntl-$(NTL_VERSION).tar.gz
 NTL_DIR=ntl-$(NTL_VERSION)
 
