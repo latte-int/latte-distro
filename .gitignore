@@ -3,6 +3,8 @@
 /ChangeLog.svn2cl
 /Makefile
 /Makefile.in
+/libtool
+/compile
 /aclocal.m4
 /autom4te.cache
 cddlib/.DS_Store.1
