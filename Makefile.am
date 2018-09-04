@@ -50,7 +50,7 @@ LATTE_DIR=latte-int-$(LATTE_VERSION)
 endif
 
 # GLPK is a prerequisite of 4ti2
-GLPK_VERSION=4.52.1
+GLPK_VERSION=4.65
 GLPK_TARGZ=$(top_srcdir)/glpk-$(GLPK_VERSION).tar.gz
 GLPK_DIR=glpk-$(GLPK_VERSION)
 
