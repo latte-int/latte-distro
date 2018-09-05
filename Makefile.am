@@ -133,13 +133,14 @@ $(NTL_DIR)/.unpacked_ntl: $(NTL_TARGZ)
 
 ### We don't pass $(LATTE_SUB_CONFIGURE_ARGS) to NTL; it does not understand common autoconf options.
 ### NTL 11.3.0's configure script also does not accept configure option CC=...
+### We configure NTL without C++11 for now.
 if LATTE_ENABLE_SHARED
 NTL_SHARED=on
 else
 NTL_SHARED=off
 endif
 $(NTL_CONFIG_FILE): $(NTL_DIR)/.unpacked_ntl $(GMP_DIR)/.built_gmp
-	( cd $(NTL_DIR)/src && ./configure CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" AR="$(AR)" LIBTOOL="$(abs_top_builddir)/libtool" RANLIB="$(RANLIB)" PREFIX="$(INSTALL_DIR)" GMP_PREFIX="$(INSTALL_DIR)" NTL_GMP_LIP=on SHARED=$(NTL_SHARED) )
+	( cd $(NTL_DIR)/src && ./configure CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" AR="$(AR)" LIBTOOL="$(abs_top_builddir)/libtool" RANLIB="$(RANLIB)" PREFIX="$(INSTALL_DIR)" GMP_PREFIX="$(INSTALL_DIR)" NTL_GMP_LIP=on SHARED=$(NTL_SHARED) NTL_STD_CXX11=off NTL_THREADS=off NTL_SAFE_VECTORS=off )
 
 $(NTL_DIR)/.built_ntl: $(NTL_CONFIG_FILE) $(GMP_DIR)/.built_gmp
 	( cd $(NTL_DIR)/src && $(MAKE) setup1 && $(MAKE) setup2 && $(MAKE) setup3 && $(MAKE) setup4 && $(MAKE) ntl.a && $(MAKE) install ) \
