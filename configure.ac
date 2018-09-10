@@ -80,6 +80,7 @@ AC_SUBST(GMP_CONFIGURE_OPTIONS, ${gmp_configure_options})
 ### (Code adapted from autoconf/status.m4.)
   latte_sub_configure_args=
   latte_sub_configure_args_gmp=
+  latte_sub_configure_args_ntl=
   ac_prev=
   eval "set x $ac_configure_args"
   shift
@@ -117,6 +118,7 @@ AC_SUBST(GMP_CONFIGURE_OPTIONS, ${gmp_configure_options})
       case $ac_arg in 
       CFLAGS*) ;;
       CXXFLAGS*) ;;
+      NTL_*) AS_VAR_APPEND([latte_sub_configure_args_ntl], [" '$ac_arg'"]) ;;
       *) AS_VAR_APPEND([latte_sub_configure_args_gmp], [" '$ac_arg'"]) ;;
       esac
       ;;
@@ -148,5 +150,6 @@ AC_SUBST(GMP_CONFIGURE_OPTIONS, ${gmp_configure_options})
 
 AC_SUBST(LATTE_SUB_CONFIGURE_ARGS, ${latte_sub_configure_args})
 AC_SUBST(LATTE_SUB_CONFIGURE_ARGS_GMP, ${latte_sub_configure_args_gmp})
+AC_SUBST(LATTE_SUB_CONFIGURE_ARGS_NTL, ${latte_sub_configure_args_ntl})
 
 AC_OUTPUT
