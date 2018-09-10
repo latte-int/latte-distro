@@ -274,7 +274,7 @@ $(LATTE_DIR)/.unpacked_latte: $(LATTE_TARGZ)
 	done && touch $@
 endif
 $(LATTE_DIR)/config.status: $(LATTE_DIR)/.unpacked_latte $(GMP_DIR)/.built_gmp $(CDDLIB_DIR)/.built_cddlib $(BUILT_LIDIA) $(NTL_DIR)/.built_ntl $(BUILT_4TI2)
-	( cd $(LATTE_DIR) && ./configure --with-default="$(INSTALL_DIR)" --prefix="$(INSTALL_DIR)" --enable-relocatable --disable-shared $(LATTE_SUB_CONFIGURE_ARGS)) 
+	( cd $(LATTE_DIR) && ./configure --with-default="$(INSTALL_DIR)" --prefix="$(INSTALL_DIR)" --enable-relocatable --disable-shared $(LATTE_SUB_CONFIGURE_ARGS) CXXFLAGS="$(CXXFLAGS) -DNTL_STD_CXX") 
 ##$(CDDPLUS_DIR)/.built_cddplus  # no longer needed
 .built_latte: $(LATTE_DIR)/config.status $(GMP_DIR)/.built_gmp $(CDDLIB_DIR)/.built_cddlib $(BUILT_LIDIA) $(NTL_DIR)/.built_ntl $(BUILT_4TI2)
 	( cd $(LATTE_DIR) && $(MAKE) && $(MAKE) install ) && touch $@
