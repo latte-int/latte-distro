@@ -39,7 +39,7 @@ LIDIA_TARGZ=$(top_srcdir)/lidia-base-$(LIDIA_VERSION).tar.gz $(top_srcdir)/lidia
 LIDIA_DIR=lidia-$(LIDIA_VERSION)
 
 #LATTE_VERSION=$(PACKAGE_VERSION)
-LATTE_VERSION=1.7.4
+LATTE_VERSION=1.7.5
 LATTE_TARGZ=$(top_srcdir)/latte-int-$(LATTE_VERSION).tar.gz
 if ENABLE_LATTE_FROM_SVN
 LATTE_DIR=latte-svn
