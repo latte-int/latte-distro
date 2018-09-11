@@ -6,6 +6,25 @@
 	To update this ChangeLog, use `make update-changelog' and then
 	copy (and edit) entries from ChangeLog.svn2cl
 
+2018-09-10  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	Version 1.7.5
+
+	* Makefile.am: Upgrade cddlib to 0.94j (much improved build
+	system), GMP to 6.1.2, GLPK to 4.65, NTL to 11.3.0 (configured
+	without C++11 features), LattE to 1.7.5
+
+	* Makefile.am: Pass configure options starting with NTL_ to NTL's
+	configure script
+
+2018-09-03  Matthias Koeppe  <mkoeppe@math.ucdavis.edu>
+
+	Version 1.7.4
+
+	* Makefile.am: Upgrade LattE to 1.7.4, 4ti2 to 1.6.9
+
+	* configure.ac: Remove outdated use of AM_MAINTAINER_MODE
+
 2016-10-12 Matthias Koeppe <mkoeppe@math.ucdavis.edu>
 
 	Version 1.7.3b
