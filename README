@@ -24,6 +24,11 @@ libtool).  (Note that on Windows, the user's home directory usually
 has a space in its name.  Use instead, for example, /cygdrive/c/latte;
 this corresponds to C:\LATTE.)
 
+If you checked out this distribution via git, you first need to
+generate the autotools build system as follows:
+
+   ./autogen.sh
+
 Optionally, if you have Maple, make sure that the directory where the
 command-line executable of Maple lives ("maple" or, on Windows,
 "cmaple.exe") is in your path:
